@@ -5,15 +5,6 @@ interface Props {
 
 const { title } = Astro.props;
 
-import dotenv from 'dotenv'
-
-
-dotenv.config()
-
-const db = createClient({
-  url: 'libsql://prototipo-proyecto-darksis.turso.io',
-  authToken: process.env.LIBSQL_AUTH_TOKEN
-})
 ---
 
 <!doctype html>
@@ -30,4 +21,3 @@ const db = createClient({
 		<slot />
 	</body>
 </html>
-
