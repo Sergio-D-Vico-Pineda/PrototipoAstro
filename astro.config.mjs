@@ -1,30 +1,43 @@
-import
-{
-    defineConfig
+import {
+   defineConfig
 }
-from 'astro/config';
+   from 'astro/config';
 import tailwind from "@astrojs/tailwind";
 import dotenv from 'dotenv';
+import {
+   Server
+} from "socket.io"
+
+import {
+   createServer
+} from "node:http"
+
+import {
+   createClient
+}
+   from "@libsql/client"
 
 dotenv.config();
 
 // https://astro.build/config
 export default defineConfig(
-{
-    integrations: [tailwind()]
-});
+   {
+      output: 'server',
+      integrations: [tailwind()]
+   });
 
-import
-{
-    createClient
-}
-from "@libsql/client";
+
+const server = createServer();
+const io = new Server(server, {
+   connectionStateRecovery: {}
+})
+
 
 const db = createClient(
-{
-    url: process.env.URL_DB,
-    authToken: process.env.TOKEN_DB,
-});
+   {
+      url: process.env.URL_DB,
+      authToken: process.env.TOKEN_DB,
+   });
 
 await db.execute(`
 CREATE TABLE IF NOT EXISTS usuario (
@@ -86,3 +99,44 @@ CREATE TABLE IF NOT EXISTS mensaje (
 );
 `);
 console.log('DB created')
+
+
+io.on('connection', async (socket) => {
+   console.log("USER CONNECTED+++++++++++++++++")
+
+   socket.on('disconnect', () => {
+      console.log('USER DISCONNECTED----------------')
+   })
+
+   socket.on('chat message', async (msg) => {
+      const username = socket.handshake.auth.username ?? 'anonymous'
+      console.log(
+         {
+            username
+         })
+
+      console.log("MESSAGE RECIEVED: " + msg)
+      /* try {
+         result = await db.execute(
+            {
+               sql: 'INSERT INTO messages (content, user) VALUES (:msg, :username)',
+               args:
+               {
+                  msg,
+                  username
+               }
+            })
+      }
+      catch (e) {
+         console.error(e)
+         return
+      } */
+
+      io.emit('chat message', msg, result, username)
+   })
+})
+
+
+server.listen(4321, () => {
+   console.log('listening on localhost:4321');
+})
