@@ -39,8 +39,8 @@ export default defineConfig(
                      })
                   })
 
-                  httpServer.listen(4320, () => {
-                     console.log('listening on localhost:4320');
+                  httpServer.listen(3000, () => {
+                     console.log('listening on localhost:3000');
                   })
 
                   server.middlewares.use((req, res, next) => {
