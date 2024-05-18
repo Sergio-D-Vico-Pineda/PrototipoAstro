@@ -2,28 +2,28 @@
 import Layout from "../layouts/Layout.astro";
 ---
 
-<Layout title="SalutMèdic" />
+<Layout title="SalutMèdic">
+   <h1>SalutMèdic</h1>
+   <picture>
+      <img src="/logo.jpeg" alt="salutmedic" />
+   </picture>
+</Layout>
 <script is:inline type="module">
    import { io } from "https://cdn.socket.io/4.7.5/socket.io.esm.min.js";
    let user = prompt("Enter username: ");
 
-   const socket = io({
+   const socket = io("http://localhost:3000", {
       auth: {
          username: user,
-         serverOffset: 0,
+         serverOffset: 1,
       },
    });
 
-   socket.on("chat message", (msg, serverOffset, username) => {
-      const item = `<li>
-      <p>${msg}</p>
-      <small>${username}</small>
-      </li>`;
-      messages.insertAdjacentHTML("beforeend", item);
-      socket.auth.serverOffset = serverOffset;
-      console.log(socket.auth.serverOffset);
-      messages.scrollTop = messages.scrollHeight;
+   socket.on("connect", () => {
+      console.log("Conectado al servidor");
    });
 
-   console.log(socket.username);
+   socket.emit("message", "Hola");
+
+   console.log(socket.auth.username);
 </script>

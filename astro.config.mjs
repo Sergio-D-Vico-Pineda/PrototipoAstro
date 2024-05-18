@@ -1,37 +1,59 @@
-import {
-   defineConfig
-}
-   from 'astro/config';
+import { defineConfig } from 'astro/config';
+import { createClient } from "@libsql/client";
+import { Server as SocketIOServer } from 'socket.io';
 import tailwind from "@astrojs/tailwind";
 import dotenv from 'dotenv';
-import {
-   Server
-} from "socket.io"
-
-import {
-   createServer
-} from "node:http"
-
-import {
-   createClient
-}
-   from "@libsql/client"
+import http from "node:http";
 
 dotenv.config();
 
 // https://astro.build/config
 export default defineConfig(
    {
-      output: 'server',
+      vite: {
+         plugins: [
+            {
+               name: 'socket.io-server',
+               configureServer(server) {
+                  const httpServer = http.createServer(server.middlewares);
+                  const io = new SocketIOServer(httpServer, {
+                     cors: {
+                        origin: "http://localhost:4321",  // Asegúrate de cambiar esto por tu URL de cliente
+                        methods: ["GET", "POST"]
+                     }
+                  });
+
+                  io.on("error", (err) => {
+                     console.error(err);
+                  });
+
+                  io.on('connection', async (socket) => {
+                     console.log(`Nuevo cliente conectado: ${socket.handshake.auth.username} \n`);
+
+                     socket.on('message', async (msg) => {
+                        console.log(`${socket.handshake.auth.username}: mensaje enviado: ${msg} \n`);
+                     })
+
+                     socket.on('disconnect', () => {
+                        console.log(`Cliente desconectado: ${socket.handshake.auth.username} \n`);
+                     })
+                  })
+
+                  httpServer.listen(4320, () => {
+                     console.log('listening on localhost:4320');
+                  })
+
+                  server.middlewares.use((req, res, next) => {
+                     httpServer.emit('request', req, res);
+                     next();
+                   });
+               }
+            }
+         ]
+      },
+      /* output: 'server', */
       integrations: [tailwind()]
    });
-
-
-const server = createServer();
-const io = new Server(server, {
-   connectionStateRecovery: {}
-})
-
 
 const db = createClient(
    {
@@ -99,44 +121,3 @@ CREATE TABLE IF NOT EXISTS mensaje (
 );
 `);
 console.log('DB created')
-
-
-io.on('connection', async (socket) => {
-   console.log("USER CONNECTED+++++++++++++++++")
-
-   socket.on('disconnect', () => {
-      console.log('USER DISCONNECTED----------------')
-   })
-
-   socket.on('chat message', async (msg) => {
-      const username = socket.handshake.auth.username ?? 'anonymous'
-      console.log(
-         {
-            username
-         })
-
-      console.log("MESSAGE RECIEVED: " + msg)
-      /* try {
-         result = await db.execute(
-            {
-               sql: 'INSERT INTO messages (content, user) VALUES (:msg, :username)',
-               args:
-               {
-                  msg,
-                  username
-               }
-            })
-      }
-      catch (e) {
-         console.error(e)
-         return
-      } */
-
-      io.emit('chat message', msg, result, username)
-   })
-})
-
-
-server.listen(4321, () => {
-   console.log('listening on localhost:4321');
-})
