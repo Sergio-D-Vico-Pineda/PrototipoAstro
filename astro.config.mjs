@@ -9,57 +9,62 @@ dotenv.config();
 
 // https://astro.build/config
 export default defineConfig(
-   {
-      vite: {
-         plugins: [
-            {
-               name: 'socket.io-server',
-               configureServer(server) {
-                  const httpServer = http.createServer(server.middlewares);
-                  const io = new SocketIOServer(httpServer, {
-                     cors: {
-                        origin: "http://localhost:4321",  // Asegúrate de cambiar esto por tu URL de cliente
-                        methods: ["GET", "POST"]
-                     }
-                  });
+  {
+    vite: {
+      plugins: [
+        {
+          name: 'socket.io-server',
+          configureServer(server) {
+            const httpServer = http.createServer(server/* .middlewares */);
+            const io = new SocketIOServer(httpServer, {
+              cors: {
+                origin: "http://localhost:4321",  // Asegúrate de cambiar esto por tu URL de cliente
+                methods: ["GET", "POST"]
+              }
+            });
 
-                  io.on("error", (err) => {
-                     console.error(err);
-                  });
+            httpServer.on('close', () => {
+              io.close();
+            });
 
-                  io.on('connection', async (socket) => {
-                     console.log(`Nuevo cliente conectado: ${socket.handshake.auth.username} \n`);
+            io.on("error", (err) => {
+              console.error(err);
+            });
 
-                     socket.on('message', async (msg) => {
-                        console.log(`${socket.handshake.auth.username}: mensaje enviado: ${msg} \n`);
-                     })
+            io.on('connection', async (socket) => {
+              console.log(`Nuevo cliente conectado: ${socket.handshake.auth.username} \n`);
 
-                     socket.on('disconnect', () => {
-                        console.log(`Cliente desconectado: ${socket.handshake.auth.username} \n`);
-                     })
-                  })
+              socket.on('message', async (msg) => {
+                console.log(`${socket.handshake.auth.username}: mensaje enviado: ${msg} \n`);
+              })
 
-                  httpServer.listen(3000, () => {
-                     console.log('listening on localhost:3000');
-                  })
+              socket.on('disconnect', () => {
+                console.log(`Cliente desconectado: ${socket.handshake.auth.username} \n`);
+              })
+            })
 
-                  server.middlewares.use((req, res, next) => {
-                     httpServer.emit('request', req, res);
-                     next();
-                   });
-               }
-            }
-         ]
-      },
-      /* output: 'server', */
-      integrations: [tailwind()]
-   });
+            httpServer.listen(3000, () => {
+              console.log('listening on localhost:3000');
+            })
+
+            /* server.middlewares.use((req, res, next) => {
+               httpServer.emit('request', req, res);
+               next();
+             }); */
+
+          }
+        }
+      ]
+    },
+    /* output: 'server', */
+    integrations: [tailwind()]
+  });
 
 const db = createClient(
-   {
-      url: process.env.URL_DB,
-      authToken: process.env.TOKEN_DB,
-   });
+  {
+    url: process.env.URL_DB,
+    authToken: process.env.TOKEN_DB,
+  });
 
 await db.execute(`
 CREATE TABLE IF NOT EXISTS usuario (
