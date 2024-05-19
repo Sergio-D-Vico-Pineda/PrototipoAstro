@@ -18,12 +18,12 @@ export default defineConfig(
             const httpServer = http.createServer(server/* .middlewares */);
             const io = new SocketIOServer(httpServer, {
               cors: {
-                origin: "http://localhost:4321",  // Asegúrate de cambiar esto por tu URL de cliente
+                origin: "http://localhost:4321",
                 methods: ["GET", "POST"]
               }
             });
 
-            httpServer.on('close', () => {
+            server.httpServer.on('close', () => {
               io.close();
             });
 
@@ -32,14 +32,24 @@ export default defineConfig(
             });
 
             io.on('connection', async (socket) => {
-              console.log(`Nuevo cliente conectado: ${socket.handshake.auth.username} \n`);
+              const clientUser = socket.handshake.auth.username;
+              console.log(`Nuevo cliente conectado: ${clientUser} \n`);
+
+              if (clientUser === 'a') {
+                io.emit('myDisconnect', '¡Hola, administrador!', socket.handshake.auth.serverOffset, clientUser);
+                socket.disconnect(true);
+              }
+
+              if (clientUser === 's') {
+                io.emit('message', '¡Hola, Scarpy!', socket.handshake.auth.serverOffset, clientUser);
+              }
 
               socket.on('message', async (msg) => {
-                console.log(`${socket.handshake.auth.username}: mensaje enviado: ${msg} \n`);
+                console.log(`${clientUser}: mensaje enviado: ${msg} \n`);
               })
 
               socket.on('disconnect', () => {
-                console.log(`Cliente desconectado: ${socket.handshake.auth.username} \n`);
+                console.log(`Cliente desconectado: ${clientUser} \n`);
               })
             })
 
