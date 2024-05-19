@@ -3,27 +3,46 @@ import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="SalutMèdic">
-   <h1 class="text-3xl text-center">SalutMèdic</h1>
+   <h1 class="text-3xl text-center mt-10">SalutMèdic</h1>
    <picture>
-      <img src="/logo.jpeg" alt="salutmedic" />
+      <img src="/logo.jpeg" alt="salutmedic" class="w-10/12 mx-auto max-w-96"/>
    </picture>
+   <form id="form" class="flex flex-col gap-2 w-full items-center">
+      <label class="min-w-32 w-10/12 text-center">
+         <h3 class="text-xl whitespace-nowrap overflow-hidden text-ellipsis"
+            >Iniciar sesión</h3
+         >
+         <input
+            type="text"
+            name="username"
+            placeholder="Escribe tu nombre..."
+            id="username"
+            autocomplete="off"
+            class="input w-full max-w-xs bg-slate-400 rounded-xl py-2 px-4 placeholder-black/60 disabled:opacity-75 disabled:bg-slate-300"
+         />
+      </label>
+      <!-- <input
+         type="password"
+         name="username"
+         placeholder="Escribe tu contraseña..."
+         id="username"
+         autocomplete="off"
+         class="input w-full max-w-xs bg-slate-400 rounded-xl py-2 px-4 placeholder-black/60 disabled:opacity-75 disabled:bg-slate-300"
+      /> -->
+      <div>
+         <button
+            type="submit"
+            id="btnConnect"
+            class="btn bg-purple-500 rounded-lg py-1 px-2 disabled:bg-purple-900"
+            >Conectar</button
+         >
+          <button
+            id="btnDisconnect"
+            disabled
+            class="btn bg-purple-500 rounded-lg py-1 px-2 disabled:bg-purple-900"
+            >Desconectar</button
+         >
+      </div>
+      <script src="/client.js" is:inline type="module"></script>
+   </form>
 </Layout>
-<script is:inline type="module">
-   import { io } from "https://cdn.socket.io/4.7.5/socket.io.esm.min.js";
-   let user = prompt("Enter username: ");
-
-   const socket = io("http://localhost:3000", {
-      auth: {
-         username: user,
-         serverOffset: 1,
-      },
-   });
-
-   socket.on("connect", () => {
-      console.log("Conectado al servidor");
-   });
-
-   socket.emit("message", "Hola");
-
-   console.log(socket.auth.username);
-</script>
