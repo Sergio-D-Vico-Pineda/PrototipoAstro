@@ -15,7 +15,7 @@ export default defineConfig(
         {
           name: 'socket.io-server',
           configureServer(server) {
-            const httpServer = http.createServer(server/* .middlewares */);
+            const httpServer = http.createServer(server);
             const io = new SocketIOServer(httpServer, {
               cors: {
                 origin: "http://localhost:4321",
@@ -56,17 +56,10 @@ export default defineConfig(
             httpServer.listen(3000, () => {
               console.log('listening on localhost:3000');
             })
-
-            /* server.middlewares.use((req, res, next) => {
-               httpServer.emit('request', req, res);
-               next();
-             }); */
-
           }
         }
       ]
     },
-    /* output: 'server', */
     integrations: [tailwind()]
   });
 
