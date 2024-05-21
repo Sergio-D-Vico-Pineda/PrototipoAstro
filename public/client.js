@@ -7,45 +7,54 @@ const btnDisconnect = document.getElementById("btnDisconnect");
 const username = document.getElementById("username");
 
 const discon = () => {
-    username.disabled = false;
-    btnConnect.disabled = false;
-    btnDisconnect.disabled = true;
-    console.log('Disconnecting...');
 
-    socket.disconnect();
-    console.log("Desconectado del servidor");
+   username.disabled = false;
+   btnConnect.disabled = false;
+   btnDisconnect.disabled = true;
+   socket.disconnect();
+   console.log("Desconectado del servidor");
 };
 
 form.addEventListener('submit', (e) => {
-    e.preventDefault()
+   e.preventDefault()
 
-    if (username.value == "") {
-        alert("Por favor, ingresa tu nombre de usuario");
-        return;
-    }
+   if (username.value == "") {
+      alert("Por favor, ingresa un nombre de usuario");
+      return;
+   }
 
-    btnConnect.disabled = true;
-    username.disabled = true;
-    btnDisconnect.disabled = false;
-    console.log('Connecting...');
+   btnConnect.disabled = true;
+   username.disabled = true;
+   btnDisconnect.disabled = false;
+   console.log('Connecting...');
 
-    socket = io("http://localhost:3000", {
-        auth: {
+   try {
+      socket = io("http://localhost:3000", {
+         auth: {
             username: username.value,
             serverOffset: 1,
-        },
-    });
+         },
+      });
 
-    socket.on("connect", () => {
-        console.log("Conectado al servidor");
-    });
+      socket.on("connect", () => {
+         console.log("Conectado al servidor");
+      });
 
-    socket.on('message', (msg, serverOffset, username) => {
-        console.log(msg, serverOffset, username);
-        socket.auth.serverOffset = serverOffset
-    })
+      socket.on('message', (msg, serverOffset, username) => {
+         console.log(`${username}: ${msg}`);
+         socket.auth.serverOffset = serverOffset;
+      })
+   }
+   catch (error) {
+      console.log(error);
+   }
 
-    socket.on("myDisconnect", discon);
+   socket.on("myDisconnect", (msg, serverOffset, clientUser) => {
+      if (socket.auth.username == clientUser) {
+         console.log(msg);
+         discon();
+      }
+   });
 })
 
 btnDisconnect.addEventListener("click", discon);
