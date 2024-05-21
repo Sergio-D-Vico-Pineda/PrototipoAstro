@@ -9,65 +9,64 @@ dotenv.config();
 
 // https://astro.build/config
 export default defineConfig(
-  {
-    vite: {
-      plugins: [
-        {
-          name: 'socket.io-server',
-          configureServer(server) {
-            const httpServer = http.createServer(server);
-            const io = new SocketIOServer(httpServer, {
-              cors: {
-                origin: "http://localhost:4321",
-                methods: ["GET", "POST"]
-              }
-            });
+   {
+      vite: {
+         plugins: [
+            {
+               name: 'socket.io-server',
+               configureServer(server) {
+                  const httpServer = http.createServer(server);
+                  const io = new SocketIOServer(httpServer, {
+                     cors: {
+                        origin: "http://localhost:4321",
+                        methods: ["GET", "POST"]
+                     }
+                  });
 
-            server.httpServer.on('close', () => {
-              io.close();
-            });
+                  server.httpServer.on('close', () => {
+                     io.close();
+                  });
 
-            io.on("error", (err) => {
-              console.error(err);
-            });
+                  io.on("error", (err) => {
+                     console.error(err);
+                  });
 
-            io.on('connection', async (socket) => {
-              const clientUser = socket.handshake.auth.username;
-              console.log(`Nuevo cliente conectado: ${clientUser} \n`);
+                  io.on('connection', async (socket) => {
+                     const clientUser = socket.handshake.auth.username;
+                     console.log(`Nuevo cliente conectado: ${clientUser} \n`);
+                     io.emit('message', `¡Hola, ${clientUser}!`, socket.handshake.auth.serverOffset, 'Server');
 
-              if (clientUser === 'a') {
-                io.emit('myDisconnect', '¡Hola, administrador!', socket.handshake.auth.serverOffset, clientUser);
-                socket.disconnect(true);
-              }
+                     if (clientUser === 'a' || !clientUser) {
+                        console.log(`Cliente desconectado: ${clientUser} \n`);
+                        io.emit('myDisconnect', `Desconectado por el servidor: cliente ${clientUser}`, socket.handshake.auth.serverOffset, clientUser);
+                        io.emit('forceDisconnect');
+                        socket.disconnect();
+                     }
 
-              if (clientUser === 's') {
-                io.emit('message', '¡Hola, Scarpy!', socket.handshake.auth.serverOffset, clientUser);
-              }
+                     socket.on('message', async (msg) => {
+                        console.log(`${clientUser}: mensaje enviado: ${msg} \n`);
+                     })
 
-              socket.on('message', async (msg) => {
-                console.log(`${clientUser}: mensaje enviado: ${msg} \n`);
-              })
+                     socket.on('disconnect', () => {
+                        console.log(`Cliente desconectado: ${clientUser} \n`);
+                     })
+                  })
 
-              socket.on('disconnect', () => {
-                console.log(`Cliente desconectado: ${clientUser} \n`);
-              })
-            })
-
-            httpServer.listen(3000, () => {
-              console.log('listening on localhost:3000');
-            })
-          }
-        }
-      ]
-    },
-    integrations: [tailwind()]
-  });
+                  httpServer.listen(3000, () => {
+                     console.log('listening on localhost:3000');
+                  })
+               }
+            }
+         ]
+      },
+      integrations: [tailwind()]
+   });
 
 const db = createClient(
-  {
-    url: process.env.URL_DB,
-    authToken: process.env.TOKEN_DB,
-  });
+   {
+      url: process.env.URL_DB,
+      authToken: process.env.TOKEN_DB,
+   });
 
 await db.execute(`
 CREATE TABLE IF NOT EXISTS usuario (
