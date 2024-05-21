@@ -3,25 +3,33 @@ import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="SalutMèdic">
-   <h1 class="text-3xl text-center mt-10">SalutMèdic</h1>
-   <picture>
-      <img src="/logo.jpeg" alt="salutmedic" class="w-10/12 mx-auto max-w-96"/>
-   </picture>
-   <form id="form" class="flex flex-col gap-2 w-full items-center">
-      <label class="min-w-32 w-10/12 text-center">
-         <h3 class="text-xl whitespace-nowrap overflow-hidden text-ellipsis"
-            >Iniciar sesión</h3
-         >
-         <input
-            type="text"
-            name="username"
-            placeholder="Escribe tu nombre..."
-            id="username"
-            autocomplete="off"
-            class="input w-full max-w-xs bg-slate-400 rounded-xl py-2 px-4 placeholder-black/60 disabled:opacity-75 disabled:bg-slate-300"
-         />
-      </label>
-      <!-- <input
+   <div class="flex justify-center items-center">
+      <div>
+         <h1 class="text-3xl text-center mt-10">SalutMèdic</h1>
+         <picture>
+            <img
+               src="/logo.jpeg"
+               alt="salutmedic"
+               class="w-10/12 mx-auto max-w-96"
+            />
+         </picture>
+         <form id="form" class="flex flex-col gap-2 w-full items-center">
+            <label class="min-w-32 w-10/12 text-center">
+               <h3
+                  class="text-xl whitespace-nowrap overflow-hidden text-ellipsis"
+               >
+                  Iniciar sesión
+               </h3>
+               <input
+                  type="text"
+                  name="username"
+                  placeholder="Escribe tu nombre..."
+                  id="username"
+                  autocomplete="off"
+                  class="input w-full max-w-xs bg-slate-400 rounded-xl py-2 px-4 placeholder-black/60 disabled:opacity-75 disabled:bg-slate-300"
+               />
+            </label>
+            <!-- <input
          type="password"
          name="username"
          placeholder="Escribe tu contraseña..."
@@ -29,20 +37,50 @@ import Layout from "../layouts/Layout.astro";
          autocomplete="off"
          class="input w-full max-w-xs bg-slate-400 rounded-xl py-2 px-4 placeholder-black/60 disabled:opacity-75 disabled:bg-slate-300"
       /> -->
-      <div>
-         <button
-            type="submit"
-            id="btnConnect"
-            class="btn bg-purple-500 rounded-lg py-1 px-2 disabled:bg-purple-900"
-            >Conectar</button
-         >
-          <button
-            id="btnDisconnect"
-            disabled
-            class="btn bg-purple-500 rounded-lg py-1 px-2 disabled:bg-purple-900"
-            >Desconectar</button
-         >
+            <div>
+               <button
+                  type="submit"
+                  id="btnConnect"
+                  class="btn bg-purple-500 rounded-lg py-1 px-2 disabled:bg-purple-900"
+                  >Conectar</button
+               >
+               <button
+                  id="btnDisconnect"
+                  disabled
+                  class="btn bg-purple-500 rounded-lg py-1 px-2 disabled:bg-purple-900"
+                  >Desconectar</button
+               >
+            </div>
+         </form>
       </div>
+
+      <form class="flex flex-col gap-2 items-center">
+         <input
+            type="text"
+            name="message"
+            placeholder="Escribe tu mensaje"
+            id="message"
+            autocomplete="off"
+            class="input w-full max-w-xs bg-slate-400 rounded-xl py-2 px-4 placeholder-black/60 disabled:opacity-75 disabled:bg-slate-300"
+         />
+         <button
+                  type="submit"
+                  id="btnSend"
+                  class="btn bg-purple-500 rounded-lg py-1 px-2 disabled:bg-purple-900"
+                  >Conectar</button
+               >
+      </form>
+
       <script src="/client.js" is:inline type="module"></script>
-   </form>
+      <script is:inline>
+         const iMessage = document.getElementById("message");
+         const btnSend = document.getElementById("btnSend");
+
+         iMessage.addEventListener("emptied", (e) => {
+            if (!iMessage.value) {
+               btnSend.disabled = true;
+            }
+         })
+      </script>
+   </div>
 </Layout>
