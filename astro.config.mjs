@@ -34,7 +34,6 @@ export default defineConfig(
                   io.on('connection', async (socket) => {
                      const clientUser = socket.handshake.auth.username;
                      console.log(`Nuevo cliente conectado: ${clientUser} \n`);
-                     io.emit('message', `¡Hola, ${clientUser}!`, socket.handshake.auth.serverOffset, 'Server');
 
                      if (clientUser === 'a' || !clientUser) {
                         console.log(`Cliente desconectado: ${clientUser} \n`);
@@ -43,8 +42,11 @@ export default defineConfig(
                         socket.disconnect();
                      }
 
+                     io.emit('message', `¡Hola, ${clientUser}!`, socket.handshake.auth.serverOffset, 'Server');
+                     
                      socket.on('message', async (msg) => {
-                        console.log(`${clientUser}: mensaje enviado: ${msg} \n`);
+                        console.log(`Mensaje enviado: ${clientUser}: ${msg} \n`);
+                        io.emit('message', msg, '1', clientUser)
                      })
 
                      socket.on('disconnect', () => {
