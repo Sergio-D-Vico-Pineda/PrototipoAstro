@@ -34,7 +34,7 @@ export default defineConfig(
                   io.on('connection', async (socket) => {
                      const clientUser = socket.handshake.auth.username;
                      console.log(`Nuevo cliente conectado: ${clientUser} \n`);
-
+                     
                      if (clientUser === 'a' || !clientUser) {
                         console.log(`Cliente desconectado: ${clientUser} \n`);
                         io.emit('myDisconnect', `Desconectado por el servidor: cliente ${clientUser}`, socket.handshake.auth.serverOffset, clientUser);
