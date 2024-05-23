@@ -46,41 +46,39 @@ import Layout from "../layouts/Layout.astro";
                >
                <button
                   id="btnDisconnect"
-                  disabled
-                  class="btn bg-purple-500 rounded-lg py-1 px-2 disabled:bg-purple-900"
+                  class="btn bg-purple-500 rounded-lg py-1 px-2 hidden disabled:bg-purple-900"
                   >Desconectar</button
                >
             </div>
          </form>
       </div>
-
-      <form class="flex flex-col gap-2 items-center">
-         <input
-            type="text"
-            name="message"
-            placeholder="Escribe tu mensaje"
-            id="message"
-            autocomplete="off"
-            class="input w-full max-w-xs bg-slate-400 rounded-xl py-2 px-4 placeholder-black/60 disabled:opacity-75 disabled:bg-slate-300"
-         />
-         <button
-                  type="submit"
-                  id="btnSend"
-                  class="btn bg-purple-500 rounded-lg py-1 px-2 disabled:bg-purple-900"
-                  >Conectar</button
-               >
-      </form>
+      <div id="chatContainer" class="hidden">
+         <h1 class="text-3xl text-center"> Chat </h1>
+         <section
+            id="chat"
+            class="bg-zinc-500 h-80 w-80 p-3 rounded-2xl overflow-y-scroll scroll-smooth"
+         >
+            <ul id="messages" class="flex flex-col gap-1">
+            </ul>
+         </section>
+         <form id="formMessage" class="flex flex-col gap-2 items-center">
+            <input
+               type="text"
+               name="message"
+               placeholder="Escribe tu mensaje"
+               id="message"
+               autocomplete="off"
+               class="input w-full max-w-xs bg-slate-400 rounded-xl py-2 px-4 placeholder-black/60 disabled:opacity-75 disabled:bg-slate-300"
+            />
+            <button
+               type="submit"
+               id="btnSend"
+               class="btn bg-purple-500 rounded-lg py-1 px-2 disabled:bg-purple-900"
+               >Enviar</button
+            >
+         </form>
+      </div>
 
       <script src="/client.js" is:inline type="module"></script>
-      <script is:inline>
-         const iMessage = document.getElementById("message");
-         const btnSend = document.getElementById("btnSend");
-
-         iMessage.addEventListener("emptied", (e) => {
-            if (!iMessage.value) {
-               btnSend.disabled = true;
-            }
-         })
-      </script>
    </div>
 </Layout>
