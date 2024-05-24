@@ -80,6 +80,7 @@ formMessage.addEventListener("submit", (e) => {
     }
     socket.emit("message", iMessage.value);
     iMessage.value = "";
+    ap.btnState();
 });
 
 btnDisconnect.addEventListener("click", discon);
