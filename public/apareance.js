@@ -4,15 +4,20 @@ const btnConnect = document.getElementById("btnConnect");
 const iMessage = document.getElementById("message");
 const btnDisconnect = document.getElementById("btnDisconnect");
 const username = document.getElementById("username");
+const disconnectContainer = document.getElementById("disconnectContainer");
 
 
 function changeMessage(active = true) {
     if (active) {
         chatContainer.classList.remove("hidden");
-        chatContainer.classList.add("block");
+        disconnectContainer.classList.remove("hidden");
+        disconnectContainer.classList.add("flex");
+        form.classList.add("hidden");
     } else {
         chatContainer.classList.add("hidden");
-        chatContainer.classList.remove("block");
+        disconnectContainer.classList.add("hidden");
+        disconnectContainer.classList.remove("flex");
+        form.classList.remove("hidden");
     }
 }
 
