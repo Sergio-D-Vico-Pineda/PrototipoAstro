@@ -29,10 +29,8 @@ form.addEventListener('submit', (e) => {
         return;
     }
 
-
      ap.loading();
     
-
     try {
         socket = io("http://localhost:3000", {
             auth: {
