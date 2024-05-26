@@ -3,21 +3,26 @@ import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="SalutMèdic">
-   <div class="flex flex-col justify-center items-center w-8/12 max-w-96 mx-auto">
+   <div
+      class="flex flex-col justify-center items-center w-8/12 max-w-96 mx-auto"
+   >
       <div class="pt-10 w-full">
-         <header id="header" class="flex justify-between">
-            <!-- <h1 class="text-3xl text-center">SalutMèdic</h1> -->
-            <h1 class="text-xl">SalutMèdic</h1>
-            <picture id="image">
+         <header id="header" class="flex flex-col justify-between items-center">
+            <h1 class="text-3xl text-center">SalutMèdic</h1>
+            <picture>
                <img
+                  id="logo"
                   src="/logo.jpeg"
                   alt="salutmedic"
-                  class="w-10/12 mx-auto max-w-12"
+                  class="w-10/12 mx-auto max-w-96"
+                  draggable="false"
                />
-               <!-- max-w-96 -->
             </picture>
          </header>
-         <div id="disconnectContainer" class="hidden justify-around items-center">
+         <div
+            id="disconnectContainer"
+            class="hidden justify-around items-center"
+         >
             <span class="">User</span>
             <button
                id="btnDisconnect"
