@@ -1,14 +1,18 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import LogOut from "../components/LogOut.astro";
+import Menu from "../components/Menu.astro";
+import ArrowRight from "../components/ArrowRight.astro";
+import Document from "../components/Document.astro";
 ---
 
 <Layout title="SalutMèdic">
    <div
-      class="flex flex-col justify-center items-center w-8/12 max-w-96 mx-auto"
+      class="flex flex-col justify-center items-center container xl:w-8/12 max-w-96 mx-auto"
    >
-      <div class="pt-10 w-full">
+      <div class="pt-4 w-full">
          <header id="header" class="flex flex-col justify-between items-center">
-            <h1 class="text-3xl text-center">SalutMèdic</h1>
+            <h1 class="text-3xl text-center ms-4">SalutMèdic</h1>
             <picture>
                <img
                   id="logo"
@@ -21,16 +25,27 @@ import Layout from "../layouts/Layout.astro";
          </header>
          <div
             id="disconnectContainer"
-            class="hidden justify-around items-center"
+            class="hidden justify-around items-center mb-3"
          >
-            <span class="">User</span>
+            <button
+               id=""
+               class="btn bg-purple-500 rounded-lg py-1 px-2 w-fit
+                hover:bg-purple-700 transition-colors"
+               ><Menu /></button
+            >
+            <span>User</span>
             <button
                id="btnDisconnect"
-               class="btn bg-purple-500 rounded-lg py-1 px-2 w-fit disabled:bg-purple-900"
-               >Desconectar</button
+               class="btn bg-purple-500 rounded-lg py-1 px-2 w-fit
+                hover:bg-purple-700 transition-colors"
+               ><LogOut /></button
             >
          </div>
-         <form id="form" class="flex flex-col gap-2 w-full items-center">
+         <form
+            id="form"
+            action="#"
+            class="flex flex-col gap-2 w-full items-center"
+         >
             <label class="min-w-32 w-10/12 max-w-60 text-center">
                <h3
                   class="text-xl whitespace-nowrap overflow-hidden text-ellipsis"
@@ -46,33 +61,73 @@ import Layout from "../layouts/Layout.astro";
                   class="input w-full max-w-xs bg-slate-400 rounded-xl py-2 px-4 placeholder-black/60 disabled:opacity-75 disabled:bg-slate-300"
                />
             </label>
-            <!-- <input
-         type="password"
-         name="username"
-         placeholder="Escribe tu contraseña..."
-         id="username"
-         autocomplete="off"
-         class="input w-full max-w-xs bg-slate-400 rounded-xl py-2 px-4 placeholder-black/60 disabled:opacity-75 disabled:bg-slate-300"
-         /> -->
+            <label class="min-w-32 w-10/12 max-w-60 text-center">
+               <input
+                  type="password"
+                  name="username"
+                  placeholder="Escribe tu contraseña..."
+                  id="username"
+                  autocomplete="off"
+                  class="input w-full max-w-xs bg-slate-400 rounded-xl py-2 px-4 placeholder-black/60 disabled:opacity-75 disabled:bg-slate-300"
+               />
+               <small class="text-red-500 hidden"
+                  >Usuario o contraseña incorrectos</small
+               >
+               <span class="text-sm">¿Olvidaste tu contraseña?</span>
+            </label>
             <div>
                <button
                   type="submit"
                   id="btnConnect"
                   class="btn bg-purple-500 rounded-lg py-1 px-2 disabled:bg-purple-900"
-                  >Conectar</button
+                  >Entrar</button
                >
             </div>
          </form>
       </div>
+      <div id="resultContainer" class="hidden">
+         <h1 class="text-3xl text-center mb-3">Resultados</h1>
+         <section
+            id=""
+            class="bg-zinc-500 h-80 w-80 p-3 rounded-2xl shadow-gray-400 shadow-2xl overflow-y-hidden"
+         >
+            <header>
+               <h3
+                  class="cursor-pointer text-2xl py-1 px-4 mx-auto w-fit rounded
+                  mb-4
+            bg-[#d9d9d9] hover:bg-[#a5a5a5] transition-colors"
+                  >Todos los resultados <ArrowRight /></h3
+               >
+            </header>
+            <article
+               class="grid grid-cols-2 overflow-y-auto overflow-x-hidden h-full place-items-center gap-1 pb-12"
+            >
+               <div> <Document /> </div>
+               <div> <Document /> </div>
+               <div> <Document /> </div>
+               <div> <Document /> </div>
+               <div> <Document /> </div>
+               <div> <Document /> </div>
+            </article>
+         </section>
+      </div>
+      <hr
+         class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700 w-full hidden"
+      />
       <div id="chatContainer" class="hidden">
-         <h1 class="text-3xl text-center">Chat</h1>
+         <h1 class="text-3xl text-center mb-3">Chat</h1>
          <section
             id="chat"
-            class="bg-zinc-500 h-80 w-80 p-3 rounded-2xl overflow-y-clip overflow-x-clip scroll-smooth"
+            class="bg-zinc-500 h-80 w-80 p-3 rounded-2xl overflow-y-auto scroll-smooth
+            shadow-black shadow-2xl"
          >
-            <ul id="messages" class="flex flex-col gap-1"></ul>
+            <ul id="messages" class="flex flex-col gap-1"> </ul>
          </section>
-         <form id="formMessage" class="flex flex-col gap-2 items-center">
+         <form
+            action="#"
+            id="formMessage"
+            class="flex flex-col gap-2 items-center"
+         >
             <input
                type="text"
                name="message"
