@@ -29,8 +29,8 @@ form.addEventListener('submit', (e) => {
         return;
     }
 
-     ap.loading();
-    
+    ap.loading();
+
     try {
         socket = io("http://localhost:3000", {
             auth: {
@@ -67,7 +67,6 @@ form.addEventListener('submit', (e) => {
     catch (error) {
         console.error(error);
     }
-
 })
 
 formMessage.addEventListener("submit", (e) => {
