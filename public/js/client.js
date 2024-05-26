@@ -6,7 +6,7 @@ const form = document.getElementById("form");
 const formMessage = document.getElementById("formMessage");
 
 const btnDisconnect = document.getElementById("btnDisconnect");
-const username = document.getElementById("username");
+const inputUsername = document.getElementById("username");
 const iMessage = document.getElementById("message");
 const messages = document.getElementById("messages");
 const chat = document.getElementById("chat");
@@ -14,7 +14,7 @@ const chat = document.getElementById("chat");
 
 ap.btnState();
 
-const discon = () => {
+function discon() {
     ap.loading(false)
     socket.disconnect();
     ap.changeMessage(false);
@@ -24,7 +24,7 @@ const discon = () => {
 form.addEventListener('submit', (e) => {
     e.preventDefault()
 
-    if (username.value == "") {
+    if (inputUsername.value == "") {
         alert("Por favor, ingresa un nombre de usuario");
         return;
     }
@@ -34,13 +34,13 @@ form.addEventListener('submit', (e) => {
     try {
         socket = io("http://localhost:3000", {
             auth: {
-                username: username.value,
+                username: inputUsername.value,
                 serverOffset: 1,
             },
         });
 
         socket.on("myDisconnect", (msg, serverOffset, clientUser) => {
-            if (socket.auth.username == clientUser) {
+            if (socket.auth.inputUsername == clientUser) {
                 console.log(msg);
                 discon();
             }
@@ -52,9 +52,9 @@ form.addEventListener('submit', (e) => {
         });
 
         socket.on('message', (msg, serverOffset, clientUser) => {
-            let item = `<li class="bg-slate-300 border border-black px-5 py-2 flex flex-col rounded-2xl text-end"><span class="text-xl">${msg}</span><small class="text-xs">${clientUser}</small> </li>`
-            if (clientUser != username.value) {
-                item = `<li class="bg-slate-400 border border-black px-5 py-2 flex flex-col rounded-2xl"><span class="text-xl">${msg}</span><small class="text-xs">${clientUser}</small></li>`
+            let item = `<li class="bg-slate-300 border border-black px-5 py-2 flex flex-col rounded-2xl text-end"><span class="text-xl text-wrap break-words">${msg}</span><small class="text-xs text-wrap break-words">${clientUser}</small> </li>`
+            if (clientUser != inputUsername.value) {
+                item = `<li class="bg-slate-400 border border-black px-5 py-2 flex flex-col rounded-2xl"><span class="text-xl text-wrap break-words">${msg}</span><small class="text-xs text-wrap break-words">${clientUser}</small></li>`
             }
             console.log(`${clientUser}: ${msg}`);
 
@@ -78,6 +78,7 @@ formMessage.addEventListener("submit", (e) => {
     socket.emit("message", iMessage.value);
     iMessage.value = "";
     ap.btnState();
+    iMessage.focus();
 });
 
 btnDisconnect.addEventListener("click", discon);
