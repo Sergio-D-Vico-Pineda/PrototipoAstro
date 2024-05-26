@@ -1,3 +1,4 @@
+import defaultTheme from 'tailwindcss/defaultTheme'
 /** @type {import('tailwindcss').Config} */
 export default {
 	content: [
@@ -5,7 +6,11 @@ export default {
 		'./public/js/*.js'
 	],
 	theme: {
-		extend: {},
+		extend: {
+			fontFamily: {
+				'ubuntu': ['Ubuntu', defaultTheme.fontFamily.sans]
+			}
+		},
 	},
 	plugins: [],
 }
