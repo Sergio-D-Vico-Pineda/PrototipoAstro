@@ -4,6 +4,7 @@ import LogOut from "../components/LogOut.astro";
 import Menu from "../components/Menu.astro";
 import ArrowRight from "../components/ArrowRight.astro";
 import Document from "../components/Document.astro";
+import UploadForm from "../components/UploadForm.astro";
 ---
 
 <Layout title="SalutMèdic">
@@ -33,7 +34,9 @@ import Document from "../components/Document.astro";
                 hover:bg-purple-700 transition-colors"
                ><Menu /></button
             >
-            <span class="text-2xl font-bold">User</span>
+            <p class="text-2xl font-bold"
+               >¡Bienvenido <span id="userSpan">User</span>!</p
+            >
             <button
                id="btnDisconnect"
                class="btn bg-purple-500 rounded-lg py-1 px-2 w-fit
@@ -74,7 +77,8 @@ import Document from "../components/Document.astro";
                   >Usuario o contraseña incorrectos</small
                >
             </label>
-            <span class="text-sm cursor-pointer">¿Olvidaste tu contraseña?</span>
+            <span class="text-sm cursor-pointer">¿Olvidaste tu contraseña?</span
+            >
             <div>
                <button
                   type="submit"
@@ -91,16 +95,16 @@ import Document from "../components/Document.astro";
             id=""
             class="bg-zinc-500 h-80 w-80 p-3 rounded-2xl shadow-gray-400 shadow-2xl overflow-y-hidden"
          >
-         <header>
-            <h3
-               class="cursor-pointer text-2xl py-1 px-4 mx-auto w-fit rounded
+            <header>
+               <h3
+                  class="cursor-pointer text-2xl py-1 px-4 mx-auto w-fit rounded
                mb-4
          bg-[#d9d9d9] hover:bg-[#a5a5a5] transition-colors"
-               >Todos los resultados <ArrowRight /></h3
-            >
-         </header>
+                  >Todos los resultados <ArrowRight /></h3
+               >
+            </header>
             <article
-               class="grid grid-cols-2 h-64 overflow-y-auto overflow-x-hidden place-items-center gap-1 pb-12 mb-3"
+               class="grid grid-cols-2 h-64 overflow-y-auto overflow-x-hidden place-items-center gap-1 pb-6 mb-3"
             >
                <div> <Document /> </div>
                <div> <Document /> </div>
@@ -148,4 +152,5 @@ import Document from "../components/Document.astro";
       <script src="/js/client.js" is:inline type="module"></script>
       <!-- <script src="/js/autologin.js" is:inline></script> -->
    </div>
+   <UploadForm />
 </Layout>

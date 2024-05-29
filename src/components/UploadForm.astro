@@ -1,0 +1,24 @@
+<label for="file"
+    >File
+    <input
+        id="myFile"
+        name="file"
+        type="file"
+        accept="application/pdf"
+    /></label
+>
+<button id="btnUpload" type="submit">Upload</button>
+
+<script is:inline>
+    const btnUpload = document.getElementById("btnUpload");
+    let pdf;
+
+    function handleSubmit() {
+        pdf = document.getElementById("myFile").files[0];
+        console.log(pdf);
+        const b64 = btoa(pdf);
+        console.log(b64);
+    }
+
+    btnUpload.addEventListener("click", handleSubmit);
+</script>
