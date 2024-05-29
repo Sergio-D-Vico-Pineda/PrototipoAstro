@@ -44,20 +44,27 @@ form.addEventListener('submit', (e) => {
             auth: {
                 username: inputUsername.value,
                 serverOffset: 1,
+                password: inputPassword.value
             },
         });
 
-        socket.on("myDisconnect", (msg, serverOffset, clientUser) => {
-            if (socket.auth.inputUsername == clientUser) {
-                console.log(msg);
-                discon();
-            }
+        socket.on("disconnect", (server) => {
+            console.log("Desconectado del servidor por el cliente");
+            forgetPassword.classList.remove("hidden");
+            discon();
+        });
+
+        socket.on("error", (err) => {
+            console.log(err);
+            discon();
         });
 
         socket.on("connect", () => {
             console.log("Conectado al servidor");
             messages.innerHTML = "";
-            ap.changeMessage(true)
+            socket.on('name', (clientName) => {
+                ap.changeMessage(true, clientName)
+            })
         });
 
         socket.on('message', (msg, serverOffset, clientUser) => {
@@ -74,6 +81,7 @@ form.addEventListener('submit', (e) => {
         })
     }
     catch (error) {
+        console.log('ERROR')
         console.error(error);
     }
 })
