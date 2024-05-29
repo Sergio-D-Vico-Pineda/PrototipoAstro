@@ -16,17 +16,26 @@ const header = document.getElementById("header");
 const h1header = document.getElementById("header").querySelector("h1");
 const logo = document.getElementById("logo");
 
-function fromLoginToChat() {
-    header.classList.toggle("flex-col");
-    h1header.classList.toggle("text-center");
-    h1header.classList.toggle("text-4xl");
-    h1header.classList.toggle("text-3xl");
-    logo.classList.toggle("max-w-96");
-    logo.classList.toggle("max-w-20");
-    clientUserDisc.innerText = `¡Bienvenido ${username.value}!`;
+function fromLoginToChat(active = true, user) {
+    if (active) {
+        header.classList.remove("flex-col");
+        h1header.classList.remove("text-center");
+        h1header.classList.remove("text-4xl");
+        h1header.classList.add("text-3xl");
+        logo.classList.remove("max-w-96");
+        logo.classList.add("max-w-20");
+        clientUserDisc.innerText = `¡Bienvenido ${user}!`;
+    } else {
+        header.classList.add("flex-col");
+        h1header.classList.add("text-center");
+        h1header.classList.add("text-4xl");
+        h1header.classList.remove("text-3xl");
+        logo.classList.add("max-w-96");
+        logo.classList.remove("max-w-20");
+    }
 }
 
-function changeMessage(active = true) {
+function changeMessage(active = true, user) {
     if (active) {
         chatContainer.classList.remove("hidden");
         resultContainer.classList.remove("hidden");
@@ -42,7 +51,7 @@ function changeMessage(active = true) {
         disconnectContainer.classList.remove("flex");
         form.classList.remove("hidden");
     }
-    fromLoginToChat();
+    fromLoginToChat(active, user);
 }
 
 function btnState() {

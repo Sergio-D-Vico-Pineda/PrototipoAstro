@@ -81,7 +81,6 @@ form.addEventListener('submit', (e) => {
         })
     }
     catch (error) {
-        console.log('ERROR')
         console.error(error);
     }
 })
