@@ -5,6 +5,8 @@ import tailwind from "@astrojs/tailwind";
 import dotenv from 'dotenv';
 import http from "node:http";
 
+let rs;
+
 dotenv.config();
 
 // https://astro.build/config
@@ -32,26 +34,45 @@ export default defineConfig(
                   });
 
                   io.on('connection', async (socket) => {
-                     const clientUser = socket.handshake.auth.username;
-                     console.log(`Nuevo cliente conectado: ${clientUser} \n`);
-                     
-                     if (clientUser === 'a' || !clientUser) {
-                        console.log(`Cliente desconectado: ${clientUser} \n`);
-                        io.emit('myDisconnect', `Desconectado por el servidor: cliente ${clientUser}`, socket.handshake.auth.serverOffset, clientUser);
+                     const clientMail = socket.handshake.auth.username;
+                     const password = socket.handshake.auth.password;
+                     console.log(`Nuevo cliente conectado: ${clientMail} \n`);
+
+                     rs = await db.execute({
+                        sql: "SELECT usuarioId, nombre FROM usuario WHERE email = $mail AND contraseñaHash = $pass LIMIT 1",
+                        args: {
+                           mail: clientMail,
+                           pass: password
+                        }
+                     });
+
+                     if (rs.rows.length === 0) {
+                        console.log('No esta en la BBDD');
                         io.emit('forceDisconnect');
                         socket.disconnect();
+                        return;
                      }
 
-                     io.emit('message', `¡Hola, ${clientUser}!`, socket.handshake.auth.serverOffset, 'Server');
-                     
-                     socket.on('message', async (msg) => {
-                        console.log(`Mensaje enviado: ${clientUser}: ${msg} \n`);
-                        io.emit('message', msg, '1', clientUser)
-                     })
+                     console.log(rs);
+
+                     if (clientMail === 'a' || !clientMail) {
+                        console.log(`Cliente desconectado: ${clientMail} \n`);
+                        io.emit('forceDisconnect');
+                        socket.disconnect();
+                        return;
+                     }
 
                      socket.on('disconnect', () => {
-                        console.log(`Cliente desconectado: ${clientUser} \n`);
+                        console.log(`Cliente desconectado: ${clientMail} \n`);
                      })
+
+                     socket.on('message', async (msg) => {
+                        console.log(`Mensaje enviado: ${clientMail}: ${msg} \n`);
+                        io.emit('message', msg, socket.handshake.auth.serverOffset, rs.rows[0].nombre);
+                     })
+
+                     io.emit('name', rs.rows[0].nombre);
+                     io.emit('message', `¡Hola, ${clientMail}!`, socket.handshake.auth.serverOffset, 'Server');
                   })
 
                   httpServer.listen(3000, () => {
