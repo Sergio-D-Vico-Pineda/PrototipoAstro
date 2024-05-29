@@ -13,15 +13,20 @@ const chat = document.getElementById("chat");
 
 const forgetPassword = document.getElementById("forgetPassword");
 const inputPassword = document.getElementById("inputPassword");
-
+const userSpan = document.getElementById("userSpan");
 
 ap.btnState();
 
 function discon() {
     ap.loading(false)
-    socket.disconnect();
     ap.changeMessage(false);
-    console.log("Desconectado del servidor");
+    socket.disconnect();
+    console.log("Desconectado del servidor por el cliente");
+};
+
+function discon2() {
+    discon();
+    forgetPassword.classList.add("hidden");
 };
 
 form.addEventListener('submit', (e) => {
@@ -48,8 +53,8 @@ form.addEventListener('submit', (e) => {
             },
         });
 
-        socket.on("disconnect", (server) => {
-            console.log("Desconectado del servidor por el cliente");
+        socket.on("disconnect", () => {
+            console.log("Desconectado por el servidor");
             forgetPassword.classList.remove("hidden");
             discon();
         });
@@ -69,7 +74,7 @@ form.addEventListener('submit', (e) => {
 
         socket.on('message', (msg, serverOffset, clientUser) => {
             let item = `<li class="bg-slate-300 border border-black px-5 py-2 flex flex-col rounded-2xl text-end"><span class="text-xl text-wrap break-words">${msg}</span><small class="text-xs text-wrap break-words">${clientUser}</small> </li>`
-            if (clientUser != inputUsername.value) {
+            if (clientUser != userSpan.innerText) {
                 item = `<li class="bg-slate-400 border border-black px-5 py-2 flex flex-col rounded-2xl"><span class="text-xl text-wrap break-words">${msg}</span><small class="text-xs text-wrap break-words">${clientUser}</small></li>`
             }
             console.log(`${clientUser}: ${msg}`);
@@ -97,6 +102,6 @@ formMessage.addEventListener("submit", (e) => {
     iMessage.focus();
 });
 
-btnDisconnect.addEventListener("click", discon);
+btnDisconnect.addEventListener("click", discon2);
 iMessage.addEventListener("input", ap.btnState);
 inputPassword.addEventListener("input", ap.removeForgetPassword);

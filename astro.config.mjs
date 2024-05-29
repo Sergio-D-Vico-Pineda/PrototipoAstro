@@ -48,31 +48,26 @@ export default defineConfig(
 
                      if (rs.rows.length === 0) {
                         console.log('No esta en la BBDD');
-                        io.emit('forceDisconnect');
-                        socket.disconnect();
-                        return;
-                     }
-
-                     console.log(rs);
-
-                     if (clientMail === 'a' || !clientMail) {
                         console.log(`Cliente desconectado: ${clientMail} \n`);
                         io.emit('forceDisconnect');
                         socket.disconnect();
                         return;
                      }
-
                      socket.on('disconnect', () => {
                         console.log(`Cliente desconectado: ${clientMail} \n`);
+                        socket.disconnect();
                      })
+
+                     console.log(rs);
+                     const clientName = rs.rows[0].nombre;
 
                      socket.on('message', async (msg) => {
-                        console.log(`Mensaje enviado: ${clientMail}: ${msg} \n`);
-                        io.emit('message', msg, socket.handshake.auth.serverOffset, rs.rows[0].nombre);
+                        console.log(`Mensaje enviado: ${clientName}: ${msg} \n`);
+                        io.emit('message', msg, socket.handshake.auth.serverOffset, clientName);
                      })
 
-                     io.emit('name', rs.rows[0].nombre);
-                     io.emit('message', `¡Hola, ${clientMail}!`, socket.handshake.auth.serverOffset, 'Server');
+                     io.emit('name', clientName);
+                     io.emit('message', `¡Hola, ${clientName}!`, socket.handshake.auth.serverOffset, 'Server');
                   })
 
                   httpServer.listen(3000, () => {
