@@ -11,6 +11,9 @@ const iMessage = document.getElementById("message");
 const messages = document.getElementById("messages");
 const chat = document.getElementById("chat");
 
+const forgetPassword = document.getElementById("forgetPassword");
+const inputPassword = document.getElementById("inputPassword");
+
 
 ap.btnState();
 
@@ -26,6 +29,11 @@ form.addEventListener('submit', (e) => {
 
     if (inputUsername.value == "") {
         alert("Por favor, ingresa un nombre de usuario");
+        return;
+    }
+
+    if (inputPassword.value == "") {
+        forgetPassword.classList.remove("hidden");
         return;
     }
 
@@ -48,6 +56,7 @@ form.addEventListener('submit', (e) => {
 
         socket.on("connect", () => {
             console.log("Conectado al servidor");
+            messages.innerHTML = "";
             ap.changeMessage(true)
         });
 
@@ -83,3 +92,4 @@ formMessage.addEventListener("submit", (e) => {
 
 btnDisconnect.addEventListener("click", discon);
 iMessage.addEventListener("input", ap.btnState);
+inputPassword.addEventListener("input", ap.removeForgetPassword);

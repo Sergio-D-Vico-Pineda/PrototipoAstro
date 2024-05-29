@@ -19,8 +19,8 @@ const logo = document.getElementById("logo");
 function fromLoginToChat() {
     header.classList.toggle("flex-col");
     h1header.classList.toggle("text-center");
+    h1header.classList.toggle("text-4xl");
     h1header.classList.toggle("text-3xl");
-    h1header.classList.toggle("text-2xl");
     logo.classList.toggle("max-w-96");
     logo.classList.toggle("max-w-20");
     clientUserDisc.innerText = `¡Bienvenido ${username.value}!`;
@@ -48,6 +48,9 @@ function changeMessage(active = true) {
 function btnState() {
     btnSend.disabled = !iMessage.value;
 }
+function removeForgetPassword() {
+    forgetPassword.classList.add("hidden");
+}
 
 function loading(active = true) {
     username.disabled = active;
@@ -66,5 +69,6 @@ function loading(active = true) {
 export {
     changeMessage,
     btnState,
-    loading
+    loading,
+    removeForgetPassword
 }
