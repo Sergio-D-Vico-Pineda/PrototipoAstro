@@ -24,7 +24,7 @@ function fromLoginToChat(active = true, user) {
         h1header.classList.add("text-3xl");
         logo.classList.remove("max-w-96");
         logo.classList.add("max-w-20");
-        clientUserDisc.innerText = `¡Bienvenido ${user}!`;
+        clientUserDisc.innerText = user;
     } else {
         header.classList.add("flex-col");
         h1header.classList.add("text-center");
