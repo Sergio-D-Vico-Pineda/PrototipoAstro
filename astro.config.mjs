@@ -20,7 +20,7 @@ export default defineConfig(
                   const httpServer = http.createServer(server);
                   const io = new SocketIOServer(httpServer, {
                      cors: {
-                        origin: "http://localhost:4321",
+                        origin: "*",
                         methods: ["GET", "POST"]
                      }
                   });
@@ -77,10 +77,11 @@ export default defineConfig(
             }
          ]
       },
+      output: 'server',
       integrations: [tailwind()]
    });
 
-const db = createClient(
+export const db = createClient(
    {
       url: process.env.URL_DB,
       authToken: process.env.TOKEN_DB,
