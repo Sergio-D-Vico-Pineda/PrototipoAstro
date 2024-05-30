@@ -1,3 +1,7 @@
+---
+
+---
+
 <label for="file"
     >File
     <input
@@ -9,15 +13,20 @@
 >
 <button id="btnUpload" type="submit">Upload</button>
 
-<script is:inline>
+<script is:inline type="module">
     const btnUpload = document.getElementById("btnUpload");
     let pdf;
 
     function handleSubmit() {
         pdf = document.getElementById("myFile").files[0];
-        console.log(pdf);
-        const b64 = btoa(pdf);
-        console.log(b64);
+        
+        console.log(pdf.toString());
+
+        const base64String = btoa(pdf);
+
+        console.log(base64String);
+
+        console.log(atob(base64String));
     }
 
     btnUpload.addEventListener("click", handleSubmit);
