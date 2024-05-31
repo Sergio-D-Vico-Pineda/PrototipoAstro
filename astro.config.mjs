@@ -20,7 +20,8 @@ export default defineConfig(
                   const httpServer = http.createServer(server);
                   const io = new SocketIOServer(httpServer, {
                      cors: {
-                        origin: "http://localhost:4321",
+                        origin: "https://automatic-meme-pv7j9j4j4vqf9pxp-4321.app.github.dev",
+                        // origin: "http://localhost:4321",
                         methods: ["GET", "POST"]
                      }
                   });

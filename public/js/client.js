@@ -45,7 +45,8 @@ form.addEventListener('submit', (e) => {
     ap.loading();
 
     try {
-        socket = io("http://localhost:3000", {
+        socket = io("https://automatic-meme-pv7j9j4j4vqf9pxp-3000.app.github.dev/", {
+            //socket = io("http://localhost:3000", {
             auth: {
                 username: inputUsername.value,
                 serverOffset: 1,
