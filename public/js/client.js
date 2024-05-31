@@ -15,11 +15,13 @@ const forgetPassword = document.getElementById("forgetPassword");
 const inputPassword = document.getElementById("inputPassword");
 const userSpan = document.getElementById("userSpan");
 
+let esMedico;
+
 ap.btnState();
 
 function discon() {
     ap.loading(false)
-    ap.changeMessage(false);
+    ap.changeMessage(false, null, esMedico);
     socket.disconnect();
     console.log("Desconectado del servidor por el cliente");
 };
@@ -45,8 +47,8 @@ form.addEventListener('submit', (e) => {
     ap.loading();
 
     try {
-        socket = io("https://automatic-meme-pv7j9j4j4vqf9pxp-3000.app.github.dev/", {
-            //socket = io("http://localhost:3000", {
+        //socket = io("https://automatic-meme-pv7j9j4j4vqf9pxp-3000.app.github.dev/", {
+        socket = io("http://localhost:3000", {
             auth: {
                 username: inputUsername.value,
                 serverOffset: 1,
@@ -68,8 +70,9 @@ form.addEventListener('submit', (e) => {
         socket.on("connect", () => {
             console.log("Conectado al servidor");
             messages.innerHTML = "";
-            socket.on('name', (clientName) => {
-                ap.changeMessage(true, clientName)
+            socket.on('name', (clientName, isMedico) => {
+                esMedico = isMedico
+                ap.changeMessage(true, clientName, esMedico)
             })
         });
 
@@ -106,3 +109,32 @@ formMessage.addEventListener("submit", (e) => {
 btnDisconnect.addEventListener("click", discon2);
 iMessage.addEventListener("input", ap.btnState);
 inputPassword.addEventListener("input", ap.removeForgetPassword);
+
+// --------------------------------------- //
+
+const selUsers = document.getElementById("selUsers");
+
+
+async function countResultsUsers(e) {
+    console.log(e.target.value);
+
+    await fetch("/api/upload", {
+        method: "GET",
+        body: formData,
+        /* headers: {
+            "Content-Type": "multipart/form-data",
+        }, */
+    })
+        .then((res) => {
+            if (res.ok) {
+                alert("File uploaded successfully");
+            }
+        })
+        .catch((err) => {
+            alert(err);
+        });
+}
+
+selUsers.addEventListener("change", countResultsUsers)
+
+// create async function
