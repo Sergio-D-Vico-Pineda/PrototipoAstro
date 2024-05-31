@@ -6,6 +6,8 @@ import dotenv from 'dotenv';
 import http from "node:http";
 
 let rs;
+let isMedico;
+let usersConnected = [];
 
 dotenv.config();
 
@@ -20,8 +22,7 @@ export default defineConfig(
                   const httpServer = http.createServer(server);
                   const io = new SocketIOServer(httpServer, {
                      cors: {
-                        origin: "https://automatic-meme-pv7j9j4j4vqf9pxp-4321.app.github.dev",
-                        // origin: "http://localhost:4321",
+                        origin: "http://localhost:4321",
                         methods: ["GET", "POST"]
                      }
                   });
@@ -37,18 +38,18 @@ export default defineConfig(
                   io.on('connection', async (socket) => {
                      const clientMail = socket.handshake.auth.username;
                      const password = socket.handshake.auth.password;
-                     console.log(`Nuevo cliente conectado: ${clientMail} \n`);
+                     console.log(`Intento conectarse : ${clientMail} \n`);
 
                      rs = await db.execute({
-                        sql: "SELECT usuarioId, nombre FROM usuario WHERE email = $mail AND contraseñaHash = $pass LIMIT 1",
+                        sql: "SELECT usuarioId, nombre, email FROM usuario WHERE email = $mail AND contraseñaHash = $pass LIMIT 1",
                         args: {
                            mail: clientMail,
                            pass: password
                         }
                      });
 
-                     if (rs.rows.length === 0) {
-                        console.log('No esta en la BBDD');
+                     if (rs.rows.length === 0 || usersConnected.includes(rs.rows[0].email)) {
+                        console.log('No esta en la BBDD o ya ha iniciado sesión');
                         console.log(`Cliente desconectado: ${clientMail} \n`);
                         io.emit('forceDisconnect');
                         socket.disconnect();
@@ -56,10 +57,23 @@ export default defineConfig(
                      }
                      socket.on('disconnect', () => {
                         console.log(`Cliente desconectado: ${clientMail} \n`);
+                        usersConnected = usersConnected.filter(email => email !== clientMail);
                         socket.disconnect();
                      })
 
-                     console.log(rs);
+                     await db.execute({
+                        sql: "SELECT 1 FROM medico WHERE usuarioId = $id",
+                        args: {
+                           id: rs.rows[0].usuarioId
+                        }
+                     }).then(rs1 => {
+                        isMedico = rs1.rows.length > 0
+                        isMedico ? console.log('Es medico') : console.log('No es medico');
+                     }).catch(err => {
+                        console.log('HAS ROTO ALGO:', err);
+                        return;
+                     })
+
                      const clientName = rs.rows[0].nombre;
 
                      socket.on('message', async (msg) => {
@@ -67,8 +81,12 @@ export default defineConfig(
                         io.emit('message', msg, socket.handshake.auth.serverOffset, clientName);
                      })
 
-                     io.emit('name', clientName);
+                     io.emit('name', clientName, isMedico);
                      io.emit('message', `¡Hola, ${clientName}!`, socket.handshake.auth.serverOffset, 'Server');
+                     usersConnected.push(rs.rows[0].email);
+
+                     console.log(`Nuevo cliente conectado: ${clientMail} \n`);
+                     console.log(`Conectados: ${usersConnected}`);
                   })
 
                   httpServer.listen(3000, () => {
