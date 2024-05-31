@@ -1,0 +1,53 @@
+---
+import ArrowRight from "../components/ArrowRight.astro";
+import Document from "../components/Document.astro";
+import UploadForm2 from "./UploadForm2.astro";
+---
+
+<div id="resultContainer" class="hidden">
+    <h1 class="text-2xl text-center mb-3">Resultados</h1>
+    <section
+        id=""
+        class="bg-zinc-500 h-80 w-80 p-3 rounded-2xl shadow-gray-400 shadow-2xl overflow-y-hidden"
+    >
+        <header>
+            <h3
+                class="cursor-pointer text-2xl py-1 px-4 mx-auto w-fit rounded
+          mb-4
+    bg-[#d9d9d9] hover:bg-[#a5a5a5] transition-colors"
+            >
+                Todos los resultados <ArrowRight />
+            </h3>
+        </header>
+        <article
+            class="grid grid-cols-2 h-64 overflow-y-auto overflow-x-hidden place-items-center gap-1 pb-6 mb-3"
+        >
+            <div><Document /></div>
+            <div><Document /></div>
+            <div><Document /></div>
+            <div><Document /></div>
+            <div><Document /></div>
+            <div><Document /></div>
+        </article>
+    </section>
+</div>
+<div id="resultContainerMedico" class="hidden">
+    <h1 class="text-2xl text-center mb-3">Resultados MEDICOS</h1>
+    <section
+        id=""
+        class="bg-zinc-500 h-80 w-80 p-3 rounded-2xl shadow-gray-400 shadow-2xl overflow-y-hidden"
+    >
+        <header>
+            <select name="Usuarios" id="selUsers">
+                <option value="1">Sergio</option>
+                <option value="2">David</option>
+                <option value="3">Angela</option>
+                <option value="4">Olga</option>
+                <option value="5">Lena</option>
+            </select>
+        </header>
+        <footer>
+            <UploadForm2 />
+        </footer>
+    </section>
+</div>

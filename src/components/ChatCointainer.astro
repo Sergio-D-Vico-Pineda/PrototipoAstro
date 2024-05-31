@@ -1,0 +1,70 @@
+---
+import { db } from "../../astro.config.mjs";
+
+const rs = await db.execute({
+    sql: "SELECT usuarioId, nombre FROM usuario WHERE email = $mail AND contraseñaHash = $pass LIMIT 1",
+    args: {
+        mail: "medico@mail.com",
+        pass: "sergio",
+    },
+});
+console.log(rs);
+---
+
+<div id="chatContainer" class="hidden">
+    <h1 class="text-2xl text-center mb-3">Chat</h1>
+    <section
+        id="chat"
+        class="bg-zinc-500 h-80 w-80 p-3 rounded-2xl overflow-y-auto scroll-smooth
+       shadow-black shadow-2xl"
+    >
+        <ul id="messages" class="flex flex-col gap-1"></ul>
+    </section>
+    <form action="#" id="formMessage" class="flex flex-col gap-2 items-center">
+        <input
+            type="text"
+            name="message"
+            placeholder="Escribe tu mensaje"
+            id="message"
+            autocomplete="off"
+            class="input w-full max-w-xs bg-slate-400 rounded-xl py-2 px-4 placeholder-black/60 disabled:opacity-75 disabled:bg-slate-300"
+        />
+        <button
+            type="submit"
+            id="btnSend"
+            class="btn bg-purple-500 rounded-lg py-1 px-2 disabled:bg-purple-900"
+            >Enviar</button
+        >
+    </form>
+</div>
+
+<div id="chatContainerMedico" class="hidden">
+    <h1 class="text-2xl text-center mb-3">Chat MEDICOS</h1>
+    <section
+        id="chatMedico"
+        class="bg-zinc-500 h-80 w-80 p-3 rounded-2xl overflow-y-auto scroll-smooth
+       shadow-black shadow-2xl"
+    >
+        <ul id="messagesMedico" class="flex flex-col gap-1"></ul>
+    </section>
+    <form
+        action="#"
+        id="formMessageMedico"
+        class="flex flex-col gap-2 items-center"
+    >
+        <input
+            type="text"
+            name="message"
+            placeholder="Escribe tu mensaje"
+            id="messageMedico"
+            autocomplete="off"
+            class="input w-full max-w-xs bg-slate-400 rounded-xl py-2 px-4 placeholder-black/60 disabled:opacity-75 disabled:bg-slate-300"
+        />
+        <button
+            type="submit"
+            id="btnSendMedico"
+            class="btn bg-purple-500 rounded-lg py-1 px-2 disabled:bg-purple-900"
+            >Enviar</button
+        >
+    </form>
+</div>
