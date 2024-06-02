@@ -30,7 +30,7 @@ import ResultContainer from "../components/ResultContainer.astro";
          >
             <button
                id=""
-               class="btn bg-purple-500 rounded-lg py-1 px-2 w-fit
+               class="btn bg-purple-500/80 rounded-lg py-1 px-2 w-fit
                 hover:bg-purple-700 transition-colors"
                ><Menu /></button
             >
@@ -39,7 +39,7 @@ import ResultContainer from "../components/ResultContainer.astro";
             </p>
             <button
                id="btnDisconnect"
-               class="btn bg-purple-500 rounded-lg py-1 px-2 w-fit
+               class="btn bg-purple-500/80 rounded-lg py-1 px-2 w-fit
                 hover:bg-purple-700 transition-colors"
                ><LogOut /></button
             >
@@ -83,15 +83,29 @@ import ResultContainer from "../components/ResultContainer.astro";
                <button
                   type="submit"
                   id="btnConnect"
-                  class="btn bg-purple-500 rounded-lg py-1 px-2 disabled:bg-purple-900"
+                  class="btn bg-purple-500/80 rounded-lg py-1 px-2 disabled:bg-purple-900"
                   >Entrar</button
+               >
+               <button
+                  type="button"
+                  id="paciente"
+                  class="btn bg-purple-500/80 rounded-lg py-1 px-2 disabled:bg-purple-900"
+                  >Paciente</button
+               >
+               <button
+                  type="button"
+                  id="medico"
+                  class="btn bg-purple-500/80 rounded-lg py-1 px-2 disabled:bg-purple-900"
+                  >Medico</button
                >
             </div>
          </form>
       </div>
 
       <ResultContainer />
-      <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700 w-full hidden" />
+      <hr
+         class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700 w-full hidden"
+      />
       <ChatCointainer />
 
       <script src="/js/client.js" is:inline type="module"></script>

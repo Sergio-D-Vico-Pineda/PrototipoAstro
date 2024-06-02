@@ -1,8 +1,14 @@
+document.getElementById("paciente").addEventListener("click", () => {
+    username.value = 'paciente@mail.com';
+    inputPassword.value = 'sergio'
+    setTimeout(() => { btnConnect.click(); }, 10);
+})
 
-username.value = 'medico@mail.com';
-inputPassword.value = 'sergio'
-setTimeout(() => { btnConnect.click(); }, 35);
-
+document.getElementById("medico").addEventListener("click", () => {
+    username.value = 'medico@mail.com';
+    inputPassword.value = 'sergio'
+    setTimeout(() => { btnConnect.click(); }, 10);
+})
 /* 
 const b64 = btoa("paciente@mail.com:sergio");
 
