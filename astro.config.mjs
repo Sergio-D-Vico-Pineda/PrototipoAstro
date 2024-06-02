@@ -5,6 +5,10 @@ import tailwind from "@astrojs/tailwind";
 import dotenv from 'dotenv';
 import http from "node:http";
 
+function log(text) {
+   console.log('SERVER: ' + text);
+}
+
 let rs;
 let isMedico;
 let usersConnected = [];
@@ -38,7 +42,7 @@ export default defineConfig(
                   io.on('connection', async (socket) => {
                      const clientMail = socket.handshake.auth.username;
                      const password = socket.handshake.auth.password;
-                     console.log(`Intento conectarse : ${clientMail} \n`);
+                     log(`Intento conectarse : ${clientMail} \n`);
 
                      rs = await db.execute({
                         sql: "SELECT usuarioId, nombre, email FROM usuario WHERE email = $mail AND contraseñaHash = $pass LIMIT 1",
@@ -49,14 +53,14 @@ export default defineConfig(
                      });
 
                      if (rs.rows.length === 0 || usersConnected.includes(rs.rows[0].email)) {
-                        console.log('No esta en la BBDD o ya ha iniciado sesión');
-                        console.log(`Cliente desconectado: ${clientMail} \n`);
+                        log('No esta en la BBDD o ya ha iniciado sesión');
+                        log(`Cliente desconectado: ${clientMail} \n`);
                         io.emit('forceDisconnect');
                         socket.disconnect();
                         return;
                      }
                      socket.on('disconnect', () => {
-                        console.log(`Cliente desconectado: ${clientMail} \n`);
+                        log(`Cliente desconectado: ${clientMail} \n`);
                         usersConnected = usersConnected.filter(email => email !== clientMail);
                         socket.disconnect();
                      })
@@ -68,29 +72,29 @@ export default defineConfig(
                         }
                      }).then(rs1 => {
                         isMedico = rs1.rows.length > 0
-                        isMedico ? console.log('Es medico') : console.log('No es medico');
+                        isMedico ? log('Es medico') : log('No es medico');
                      }).catch(err => {
-                        console.log('HAS ROTO ALGO:', err);
+                        log('HAS ROTO ALGO:', err);
                         return;
                      })
 
                      const clientName = rs.rows[0].nombre;
 
                      socket.on('message', async (msg) => {
-                        console.log(`Mensaje enviado: ${clientName}: ${msg} \n`);
+                        log(`Mensaje enviado: ${clientName}: ${msg} \n`);
                         io.emit('message', msg, socket.handshake.auth.serverOffset, clientName);
                      })
 
-                     io.emit('name', clientName, isMedico);
+                     /* io.emit('name', clientName, isMedico); */
                      io.emit('message', `¡Hola, ${clientName}!`, socket.handshake.auth.serverOffset, 'Server');
                      usersConnected.push(rs.rows[0].email);
 
-                     console.log(`Nuevo cliente conectado: ${clientMail} \n`);
-                     console.log(`Conectados: ${usersConnected}`);
+                     log(`Nuevo cliente conectado: ${clientMail} \n`);
+                     log(`Conectados: ${usersConnected}`);
                   })
 
                   httpServer.listen(3000, () => {
-                     console.log('listening on localhost:3000');
+                     log('listening on localhost:3000');
                   })
                }
             }
@@ -165,4 +169,4 @@ CREATE TABLE IF NOT EXISTS mensaje (
   FOREIGN KEY (receptorId) REFERENCES usuario(usuarioId)
 );
 `);
-console.log('DB created')
+log('DB created')
