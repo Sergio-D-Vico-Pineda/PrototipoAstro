@@ -1,0 +1,44 @@
+<!-- src/components/FileUpload.astro -->
+<form id="upload-form">
+    <input
+        class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+        type="file"
+        id="file-input"
+        name="file"
+        accept="application/pdf"
+    />
+    <button
+        class="middle none center rounded-lg bg-purple-500/80 py-3 px-6 font-sans text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:bg-purple-700 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+        type="button"
+        id="upload-button">Upload</button
+    >
+</form>
+
+<script is:inline type="module">
+    document
+        .getElementById("upload-button")
+        .addEventListener("click", async () => {
+            const input = document.getElementById("file-input");
+            const file = input.files[0];
+            if (!file) return alert("Please select a file");
+
+            const formData = new FormData();
+            formData.append("file", file);
+
+            await fetch("/api/upload", {
+                method: "POST",
+                body: formData,
+                /* headers: {
+                    "Content-Type": "multipart/form-data",
+                }, */
+            })
+                .then((res) => {
+                    if (res.ok) {
+                        alert("File uploaded successfully");
+                    }
+                })
+                .catch((err) => {
+                    alert(err);
+                });
+        });
+</script>

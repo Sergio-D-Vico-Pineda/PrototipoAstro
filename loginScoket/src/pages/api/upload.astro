@@ -1,0 +1,51 @@
+---
+// src/pages/api/upload.ts
+import type { APIRoute } from "astro";
+import { db } from "../../../astro.config.mjs";
+
+const POST: APIRoute = async ({ request }) => {
+    const formData = await request.formData();
+    const file = formData.get("file") as Blob;
+    let medicoId = 6,
+        pacienteId = 1,
+        descripcion = "test",
+        fecha = new Date(),
+        tipoResultado = "Análisis";
+
+    if (!file) {
+        return new Response("No file uploaded", { status: 400 });
+    }
+
+    // Convertir el archivo a base64
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    const base64String = buffer.toString("base64");
+    /* console.log(base64String); */
+    console.log(base64String.length);
+    // Convertir base64 de nuevo a Buffer
+
+    // Enviar base64 al servidor
+    await db.execute({
+        sql: "INSERT INTO resultado( medicoId, pacienteId, descripcion, fecha, tipoResultado, archivo) VALUES($medicoId, $pacienteId, $descripcion, $fecha, $tipoResultado, $archivo)",
+        args: {
+            medicoId,
+            pacienteId,
+            descripcion,
+            fecha,
+            tipoResultado,
+            archivo: base64String,
+        },
+    });
+
+    console.log(JSON.stringify(base64String));
+
+    return new Response(null, {
+        status: 200,
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+};
+
+await POST(Astro);
+---

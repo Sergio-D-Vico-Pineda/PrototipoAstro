@@ -1,0 +1,114 @@
+---
+import Layout from "../layouts/Layout.astro";
+import LogOut from "../components/LogOut.astro";
+import Menu from "../components/Menu.astro";
+
+import ChatCointainer from "../components/ChatCointainer.astro";
+import ResultContainer from "../components/ResultContainer.astro";
+---
+
+<Layout title="SalutMèdic">
+   <div
+      class="flex flex-col justify-center items-center container xl:w-8/12 max-w-96 mx-auto"
+   >
+      <div class="pt-4 w-full">
+         <header id="header" class="flex flex-col justify-between items-center">
+            <h1 class="text-4xl text-center ms-4">SalutMèdic</h1>
+            <picture>
+               <img
+                  id="logo"
+                  src="/logo.png"
+                  alt="salutmedic"
+                  class="w-10/12 mx-auto max-w-96"
+                  draggable="false"
+               />
+            </picture>
+         </header>
+         <div
+            id="disconnectContainer"
+            class="hidden justify-around items-center mb-3"
+         >
+            <button
+               id=""
+               class="btn bg-purple-500/80 rounded-lg py-1 px-2 w-fit
+                hover:bg-purple-700 transition-colors"
+               ><Menu /></button
+            >
+            <p class="text-2xl font-bold">
+               ¡Bienvenido <span id="userSpan">User</span>!
+            </p>
+            <button
+               id="btnDisconnect"
+               class="btn bg-purple-500/80 rounded-lg py-1 px-2 w-fit
+                hover:bg-purple-700 transition-colors"
+               ><LogOut /></button
+            >
+         </div>
+         <form
+            id="form"
+            action="#"
+            class="flex flex-col gap-2 w-full items-center"
+         >
+            <label class="min-w-32 w-10/12 max-w-60 text-center">
+               <h3
+                  class="text-xl whitespace-nowrap overflow-hidden text-ellipsis"
+               >
+                  Iniciar sesión
+               </h3>
+               <input
+                  type="text"
+                  name="username"
+                  placeholder="Escribe tu mail..."
+                  id="username"
+                  autocomplete="off"
+                  class="input w-full max-w-xs bg-slate-400 rounded-xl py-2 px-4 placeholder-black/60 disabled:opacity-75 disabled:bg-slate-300"
+               />
+            </label>
+            <label class="min-w-32 w-10/12 max-w-60 text-center">
+               <input
+                  type="password"
+                  name="username"
+                  placeholder="Escribe tu contraseña..."
+                  id="inputPassword"
+                  autocomplete="off"
+                  class="input w-full max-w-xs bg-slate-400 rounded-xl py-2 px-4 placeholder-black/60 disabled:opacity-75 disabled:bg-slate-300"
+               />
+               <small id="forgetPassword" class="text-red-500 hidden"
+                  >Usuario o contraseña incorrectos</small
+               >
+            </label>
+            <span class="text-sm cursor-pointer">¿Olvidaste tu contraseña?</span
+            >
+            <div>
+               <button
+                  type="submit"
+                  id="btnConnect"
+                  class="btn bg-purple-500/80 rounded-lg py-1 px-2 disabled:bg-purple-900"
+                  >Entrar</button
+               >
+               <button
+                  type="button"
+                  id="paciente"
+                  class="btn bg-purple-500/80 rounded-lg py-1 px-2 disabled:bg-purple-900"
+                  >Paciente</button
+               >
+               <button
+                  type="button"
+                  id="medico"
+                  class="btn bg-purple-500/80 rounded-lg py-1 px-2 disabled:bg-purple-900"
+                  >Medico</button
+               >
+            </div>
+         </form>
+      </div>
+
+      <ResultContainer />
+      <hr
+         class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700 w-full hidden"
+      />
+      <ChatCointainer />
+
+      <script src="/js/client.js" is:inline type="module"></script>
+      <script src="/js/autologin.js" is:inline></script>
+   </div>
+</Layout>
