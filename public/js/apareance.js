@@ -36,6 +36,7 @@ function fromLoginToChat(active = true, user) {
         h1header.classList.add("text-center");
         h1header.classList.add("text-4xl");
         h1header.classList.remove("text-3xl");
+        clientUserDisc.innerText = 'User';
         logo.classList.add("max-w-96");
         logo.classList.remove("max-w-20");
         form.classList.remove("hidden");
@@ -44,7 +45,7 @@ function fromLoginToChat(active = true, user) {
     }
 }
 
-function changeMessage(active = true, user, isMedico ) {
+function changeMessage(active = true, user, isMedico) {
     console.log(isMedico)
     if (isMedico == false) {
         console.log('NO ES MEDICO')
@@ -96,7 +97,6 @@ function loading(active = true) {
         btnDisconnect.classList.add("hidden");
     }
 }
-
 
 export {
     changeMessage,
