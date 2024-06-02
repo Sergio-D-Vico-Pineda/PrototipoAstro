@@ -7,7 +7,7 @@ const hr = document.querySelector("hr");
 const btnConnect = document.getElementById("btnConnect");
 const iMessage = document.getElementById("message");
 const btnDisconnect = document.getElementById("btnDisconnect");
-const username = document.getElementById("username");
+const iEmail = document.getElementById("email");
 
 const disconnectContainer = document.getElementById("disconnectContainer");
 const clientUserDisc = document.getElementById("disconnectContainer").querySelector("span");
@@ -19,7 +19,7 @@ const logo = document.getElementById("logo");
 const chatContainerMedico = document.getElementById("chatContainerMedico");
 const resultContainerMedico = document.getElementById("resultContainerMedico");
 
-function fromLoginToChat(active = true, user) {
+function fromLoginToChat(active, user) {
     if (active) {
         header.classList.remove("flex-col");
         h1header.classList.remove("text-center");
@@ -47,35 +47,45 @@ function fromLoginToChat(active = true, user) {
 
 function changeMessage(active = true, user, isMedico) {
     console.log(isMedico)
-    if (isMedico == false) {
-        console.log('NO ES MEDICO')
-        if (active) {
-            console.log('NO ES MEDICO ACTIVO')
-            chatContainer.classList.remove("hidden");
-            resultContainer.classList.remove("hidden");
-            hr.classList.remove("hidden");
 
-        } else {
-            console.log('NO ES MEDICO INACTIVO')
-            chatContainer.classList.add("hidden");
-            resultContainer.classList.add("hidden");
-            hr.classList.add("hidden");
-        }
-    } else {
-        if (active) {
-            console.log('ES MEDICO ACTIVO')
-            chatContainerMedico.classList.remove("hidden");
-            resultContainerMedico.classList.remove("hidden");
-            hr.classList.remove("hidden");
-        } else {
-            console.log('ES MEDICO INACTIVO')
-            chatContainerMedico.classList.add("hidden");
-            resultContainerMedico.classList.add("hidden");
-            hr.classList.add("hidden");
-        }
+    if (active && isMedico == false) {
+        console.log('NO ES MEDICO ACTIVO')
+        chatContainer.classList.remove("hidden");
+        resultContainer.classList.remove("hidden");
+        hr.classList.remove("hidden");
+
+    } else if (isMedico == false) {
+        console.log('NO ES MEDICO INACTIVO')
+        chatContainer.classList.add("hidden");
+        resultContainer.classList.add("hidden");
+        hr.classList.add("hidden");
+    }
+
+    if (active && isMedico == true) {
+        console.log('ES MEDICO ACTIVO')
+        chatContainerMedico.classList.remove("hidden");
+        resultContainerMedico.classList.remove("hidden");
+        hr.classList.remove("hidden");
+    } else if (isMedico == true) {
+        console.log('ES MEDICO INACTIVO')
+        chatContainerMedico.classList.add("hidden");
+        resultContainerMedico.classList.add("hidden");
+        hr.classList.add("hidden");
+    }
+
+    if (isMedico == undefined) {
+        console.log('INACTIVO todo')
+        chatContainerMedico.classList.add("hidden");
+        resultContainerMedico.classList.add("hidden");
+        hr.classList.add("hidden");
+        //---//
+        chatContainer.classList.add("hidden");
+        resultContainer.classList.add("hidden");
+        hr.classList.add("hidden");
     }
 
     fromLoginToChat(active, user);
+
 }
 
 function btnState() {
@@ -86,7 +96,7 @@ function removeForgetPassword() {
 }
 
 function loading(active = true) {
-    username.disabled = active;
+    iEmail.disabled = active;
     btnConnect.disabled = active;
     btnDisconnect.disabled = !active;
     if (active) {

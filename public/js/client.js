@@ -1,15 +1,11 @@
-import { io } from "https://cdn.socket.io/4.7.5/socket.io.esm.min.js";
+
 import * as ap from "./apareance.js";
 
 let socket;
 const form = document.getElementById("form");
-const formMessage = document.getElementById("formMessage");
 
 const btnDisconnect = document.getElementById("btnDisconnect");
-const inputUsername = document.getElementById("username");
-const iMessage = document.getElementById("message");
-const messages = document.getElementById("messages");
-const chat = document.getElementById("chat");
+const iEmail = document.getElementById("email");
 
 const forgetPassword = document.getElementById("forgetPassword");
 const inputPassword = document.getElementById("inputPassword");
@@ -22,7 +18,6 @@ ap.btnState();
 function discon() {
     ap.loading(false)
     ap.changeMessage(false, null, esMedico);
-    socket.disconnect();
     console.log("Desconectado del servidor por el cliente");
 };
 
@@ -34,8 +29,8 @@ function discon2() {
 form.addEventListener('submit', (e) => {
     e.preventDefault()
 
-    if (inputUsername.value == "") {
-        alert("Por favor, ingresa un nombre de usuario");
+    if (iEmail.value == "") {
+        alert("Por favor, ingresa un correo");
         return;
     }
 
@@ -46,68 +41,37 @@ form.addEventListener('submit', (e) => {
 
     ap.loading();
 
-    try {
-        //socket = io("https://automatic-meme-pv7j9j4j4vqf9pxp-3000.app.github.dev/", {
-        socket = io("http://localhost:3000", {
-            auth: {
-                username: inputUsername.value,
-                serverOffset: 1,
-                password: inputPassword.value
-            },
-        });
-
-        socket.on("disconnect", () => {
-            console.log("Desconectado por el servidor");
-            forgetPassword.classList.remove("hidden");
-            discon();
-        });
-
-        socket.on("error", (err) => {
-            console.log(err);
-            discon();
-        });
-
-        socket.on("connect", () => {
-            console.log("Conectado al servidor");
-            messages.innerHTML = "";
-            socket.on('name', (clientName, isMedico) => {
-                esMedico = isMedico
-                ap.changeMessage(true, clientName, esMedico)
-            })
-        });
-
-        socket.on('message', (msg, serverOffset, clientUser) => {
-            let item = `<li class="bg-slate-300 border border-black px-5 py-2 flex flex-col rounded-2xl text-end"><span class="text-xl text-wrap break-words">${msg}</span><small class="text-xs text-wrap break-words">${clientUser}</small> </li>`
-            if (clientUser != userSpan.innerText) {
-                item = `<li class="bg-slate-400 border border-black px-5 py-2 flex flex-col rounded-2xl"><span class="text-xl text-wrap break-words">${msg}</span><small class="text-xs text-wrap break-words">${clientUser}</small></li>`
+    fetch("/api/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            email: iEmail.value,
+            password: inputPassword.value,
+        }),
+    })
+        .then((res) => {
+            if (!res.ok) {
+                forgetPassword.classList.remove("hidden");
+                ap.loading(false);
             }
-            console.log(`${clientUser}: ${msg}`);
-
-            messages.insertAdjacentHTML('beforeend', item)
-            socket.auth.serverOffset = serverOffset
-
-            chat.scrollTop = chat.scrollHeight
+            else
+                return res.json();
         })
-    }
-    catch (error) {
-        console.error(error);
-    }
+        .then((data) => {
+            ap.changeMessage(true, data.nombre, data.medico);
+        })
+        .catch((err) => {
+            ap.loading(false);
+            console.error(err);
+        });
 })
 
-formMessage.addEventListener("submit", (e) => {
-    e.preventDefault();
-    if (iMessage.value == "") {
-        alert("Por favor, ingresa un mensaje");
-        return;
-    }
-    socket.emit("message", iMessage.value);
-    iMessage.value = "";
-    ap.btnState();
-    iMessage.focus();
-});
+
 
 btnDisconnect.addEventListener("click", discon2);
-iMessage.addEventListener("input", ap.btnState);
+
 inputPassword.addEventListener("input", ap.removeForgetPassword);
 
 // --------------------------------------- //
@@ -133,6 +97,29 @@ async function countResultsUsers(e) {
         .catch((err) => {
             alert(err);
         });
+}
+
+async function getData(datas) {
+    let edata = {};
+    await fetch('/api/db', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(datas),
+        signal: signalA
+    }).then((res) => {
+        if (!res.ok) {
+            alert("Error: " + res.status);
+        }
+        return res.json();
+    }).then((data) => {
+        edata.medico = data.medico
+        edata.nombre = data.nombre
+    }).catch((err) => {
+        console.error(err);
+    })
+    return edata
 }
 
 selUsers.addEventListener("change", countResultsUsers)
