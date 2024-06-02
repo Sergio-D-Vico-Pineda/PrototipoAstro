@@ -63,6 +63,7 @@ export default defineConfig(
                         log(`Cliente desconectado: ${clientMail} \n`);
                         usersConnected = usersConnected.filter(email => email !== clientMail);
                         socket.disconnect();
+                        return;
                      })
 
                      await db.execute({
