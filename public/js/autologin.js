@@ -1,12 +1,12 @@
 document.getElementById("paciente").addEventListener("click", () => {
-    username.value = 'paciente@mail.com';
-    inputPassword.value = 'sergio'
+    document.getElementById("email").value = 'paciente@mail.com';
+    document.getElementById("inputPassword").value = 'sergio'
     setTimeout(() => { btnConnect.click(); }, 10);
 })
 
 document.getElementById("medico").addEventListener("click", () => {
-    username.value = 'medico@mail.com';
-    inputPassword.value = 'sergio'
+    document.getElementById("email").value = 'medico@mail.com';
+    document.getElementById("inputPassword").value = 'sergio'
     setTimeout(() => { btnConnect.click(); }, 10);
 })
 /* 
