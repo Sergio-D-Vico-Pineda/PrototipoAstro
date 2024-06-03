@@ -104,52 +104,33 @@ inputPassword.addEventListener("input", ap.removeForgetPassword);
 
 // --------------------------------------- //
 
-const selUsers = document.getElementById("selUsers");
+// create async function
+document.getElementById("disconnectall").addEventListener("click", () => {
 
-
-async function countResultsUsers(e) {
-    console.log(e.target.value);
-
-    await fetch("/api/upload", {
-        method: "GET",
-        body: formData,
-        /* headers: {
-            "Content-Type": "multipart/form-data",
-        }, */
+    fetch("/api/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            email: 'admin',
+            disconnect: false
+        }),
     })
         .then((res) => {
-            if (res.ok) {
-                alert("File uploaded successfully");
+            if (!res.ok) {
+                console.log('ERROR DISCONNECTING??')
             }
+            else
+                return res.json();
+        })
+        .then((data) => {
+            ap.loading(false)
+            ap.changeMessage(false, null, esMedico);
         })
         .catch((err) => {
-            alert(err);
+            console.log('ERROR DISCONNECTING??')
+            console.error(err);
         });
-}
 
-async function getData(datas) {
-    let edata = {};
-    await fetch('/api/db', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(datas),
-        signal: signalA
-    }).then((res) => {
-        if (!res.ok) {
-            alert("Error: " + res.status);
-        }
-        return res.json();
-    }).then((data) => {
-        edata.medico = data.medico
-        edata.nombre = data.nombre
-    }).catch((err) => {
-        console.error(err);
-    })
-    return edata
-}
-
-selUsers.addEventListener("change", countResultsUsers)
-
-// create async function
+})
