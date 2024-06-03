@@ -77,25 +77,26 @@ import ResultContainer from "../components/ResultContainer.astro";
                   >Usuario o contraseña incorrectos</small
                >
             </label>
-            <span class="text-sm cursor-pointer">¿Olvidaste tu contraseña?</span
+            <span id="disconnectall" class="text-sm cursor-pointer"
+               >¿Olvidaste tu contraseña?</span
             >
             <div>
                <button
                   type="submit"
                   id="btnConnect"
-                  class="btn bg-purple-500/80 rounded-lg py-1 px-2 disabled:bg-purple-900"
+                  class="btn bg-purple-500/80 rounded-lg py-1 px-2 hover:bg-purple-500 disabled:bg-purple-900 transition-colors"
                   >Entrar</button
                >
                <button
                   type="button"
                   id="paciente"
-                  class="btn bg-purple-500/80 rounded-lg py-1 px-2 disabled:bg-purple-900"
+                  class="btn bg-purple-500/80 rounded-lg py-1 px-2 hover:bg-purple-500 disabled:bg-purple-900 transition-colors"
                   >Paciente</button
                >
                <button
                   type="button"
                   id="medico"
-                  class="btn bg-purple-500/80 rounded-lg py-1 px-2 disabled:bg-purple-900"
+                  class="btn bg-purple-500/80 rounded-lg py-1 px-2 hover:bg-purple-500 disabled:bg-purple-900 transition-colors"
                   >Medico</button
                >
             </div>
