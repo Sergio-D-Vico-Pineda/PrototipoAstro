@@ -1,7 +1,7 @@
 
 import * as ap from "./apareance.js";
+/* import * as m from "./medic.js"; */
 
-let socket;
 const form = document.getElementById("form");
 
 const btnDisconnect = document.getElementById("btnDisconnect");
@@ -9,11 +9,10 @@ const iEmail = document.getElementById("email");
 
 const forgetPassword = document.getElementById("forgetPassword");
 const inputPassword = document.getElementById("inputPassword");
-const userSpan = document.getElementById("userSpan");
 
 let esMedico;
 
-ap.btnState();
+/* ap.btnState(); */
 
 function discon() {
     /* ap.loading(false) */
@@ -46,7 +45,7 @@ function discon() {
             console.error(err);
         });
 
-    console.log("Desconectado del servidor por el cliente");
+    console.log("Usuario desconectado");
 };
 
 function discon2() {
