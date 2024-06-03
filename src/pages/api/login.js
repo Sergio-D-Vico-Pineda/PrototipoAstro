@@ -5,10 +5,23 @@ let usersConnected = [];
 export async function POST({ request }) {
     const data = await request.json();
 
+    const clientMail = data.email;
+    const password = data.password;
+
+    if (data.disconnect === false && clientMail === 'admin') {
+        console.log('Desconectar a todos los usuarios')
+        usersConnected = [];
+        return new Response(JSON.stringify({ message: "TODOS desconectados" }), {
+            status: 200,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+    }
+
     if (data.disconnect) {
-        usersConnected.push(rs.rows[0].email);
-        // pasar al siguiente middle ware
         console.log('Desconectar a ', data.email)
+        usersConnected = usersConnected.filter(email => email !== clientMail);
         return new Response(JSON.stringify({ message: "Usuario desconectado" }), {
             status: 200,
             headers: {
@@ -17,8 +30,6 @@ export async function POST({ request }) {
         });
     }
 
-    const clientMail = data.email;
-    const password = data.password;
     console.log(clientMail, password);
 
     const rs = await db.execute({
@@ -29,8 +40,9 @@ export async function POST({ request }) {
         }
     });
 
-    if (rs.rows.length === 0) {
-        return new Response(JSON.stringify({ error: "Usuario no encontrado" }), {
+    if (rs.rows.length === 0 || usersConnected.includes(rs.rows[0].email)) {
+        console.log("Usuario no encontrado o ya está conectado");
+        return new Response(JSON.stringify({ error: "Usuario no encontrado o ya está conectado" }), {
             status: 404,
             headers: {
                 "Content-Type": "application/json",
