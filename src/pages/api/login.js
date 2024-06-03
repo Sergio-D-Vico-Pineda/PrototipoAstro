@@ -1,7 +1,21 @@
 import { db } from "../../../astro.config.mjs";
 
+let usersConnected = [];
+
 export async function POST({ request }) {
     const data = await request.json();
+
+    if (data.disconnect) {
+        usersConnected.push(rs.rows[0].email);
+        // pasar al siguiente middle ware
+        console.log('Desconectar a ', data.email)
+        return new Response(JSON.stringify({ message: "Usuario desconectado" }), {
+            status: 200,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+    }
 
     const clientMail = data.email;
     const password = data.password;
@@ -37,6 +51,7 @@ export async function POST({ request }) {
         email: rs.rows[0].email,
         medico: rs1.rows.length > 0
     };
+    usersConnected.push(rs.rows[0].email);
 
     return new Response(JSON.stringify(respo), {
         status: 200,

@@ -16,8 +16,36 @@ let esMedico;
 ap.btnState();
 
 function discon() {
-    ap.loading(false)
-    ap.changeMessage(false, null, esMedico);
+    /* ap.loading(false) */
+    /* ap.changeMessage(false, null, esMedico); */
+
+    fetch("/api/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            email: iEmail.value,
+            password: inputPassword.value,
+            disconnect: true
+        }),
+    })
+        .then((res) => {
+            if (!res.ok) {
+                console.log('ERROR DISCONNECTING??')
+            }
+            else
+                return res.json();
+        })
+        .then((data) => {
+            ap.loading(false)
+            ap.changeMessage(false, null, esMedico);
+        })
+        .catch((err) => {
+            console.log('ERROR DISCONNECTING??')
+            console.error(err);
+        });
+
     console.log("Desconectado del servidor por el cliente");
 };
 
