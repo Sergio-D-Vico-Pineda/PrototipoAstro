@@ -65,7 +65,6 @@ export default defineConfig(
                         log(`Cliente desconectado: ${clientMail} \n`);
                         usersConnected = usersConnected.filter(email => email !== clientMail);
                         socket.disconnect();
-                        return;
                      })
 
                      await db.execute({
@@ -77,8 +76,7 @@ export default defineConfig(
                         isMedico = rs1.rows.length > 0
                         isMedico ? log('Es medico') : log('No es medico');
                      }).catch(err => {
-                        log('HAS ROTO ALGO:', err);
-                        return;
+                        log(`HAS ROTO ALGO: ${err}`);
                      })
 
                      const clientName = rs.rows[0].nombre;
