@@ -85,10 +85,8 @@ async function getChats() {
             // insert user into div
         });
         // ------------------------ //
-
-        
-
     }
+    // todo back to chatsContainer
     /*  }); */
 };
 
