@@ -10,6 +10,8 @@ const iEmail = document.getElementById("email");
 const forgetPassword = document.getElementById("forgetPassword");
 const inputPassword = document.getElementById("inputPassword");
 
+const btnBack = document.getElementById("btnBack");
+
 let esMedico;
 
 /* ap.btnState(); */
@@ -53,6 +55,19 @@ function discon2() {
     forgetPassword.classList.add("hidden");
 };
 
+function back() {
+    chatsContainer.classList.remove("hidden");
+    chatContainer.classList.add("hidden");
+}
+
+// --------------------------------------- //
+
+btnBack.addEventListener("click", back);
+
+btnDisconnect.addEventListener("click", discon2);
+
+inputPassword.addEventListener("input", ap.removeForgetPassword);
+
 form.addEventListener('submit', (e) => {
     e.preventDefault()
 
@@ -94,12 +109,6 @@ form.addEventListener('submit', (e) => {
             console.error(err);
         });
 })
-
-
-
-btnDisconnect.addEventListener("click", discon2);
-
-inputPassword.addEventListener("input", ap.removeForgetPassword);
 
 // --------------------------------------- //
 

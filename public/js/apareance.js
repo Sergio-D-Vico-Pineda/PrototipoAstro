@@ -1,6 +1,8 @@
 const btnSend = document.getElementById("btnSend");
 
 const chatContainer = document.getElementById("chatContainer");
+
+const chatsContainer = document.getElementById("chatsContainer");
 const resultContainer = document.getElementById("resultContainer");
 const hr = document.querySelector("hr");
 
@@ -50,13 +52,13 @@ function changeMessage(active = true, user, isMedico) {
 
     if (active && isMedico == false) {
         console.log('NO ES MEDICO ACTIVO')
-        chatContainer.classList.remove("hidden");
+        chatsContainer.classList.remove("hidden");
         resultContainer.classList.remove("hidden");
         hr.classList.remove("hidden");
 
     } else if (isMedico == false) {
         console.log('NO ES MEDICO INACTIVO')
-        chatContainer.classList.add("hidden");
+        chatsContainer.classList.add("hidden");
         resultContainer.classList.add("hidden");
         hr.classList.add("hidden");
     }
@@ -79,13 +81,13 @@ function changeMessage(active = true, user, isMedico) {
         resultContainerMedico.classList.add("hidden");
         hr.classList.add("hidden");
         //---//
+        chatsContainer.classList.add("hidden");
         chatContainer.classList.add("hidden");
         resultContainer.classList.add("hidden");
         hr.classList.add("hidden");
     }
 
     fromLoginToChat(active, user);
-
 }
 
 function btnState() {
