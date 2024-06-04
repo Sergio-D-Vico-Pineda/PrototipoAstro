@@ -1,5 +1,5 @@
-
 import * as ap from "./apareance.js";
+import * as cb from "./chatbox.js";
 /* import * as m from "./medic.js"; */
 
 const form = document.getElementById("form");
@@ -14,12 +14,7 @@ const btnBack = document.getElementById("btnBack");
 
 let esMedico;
 
-/* ap.btnState(); */
-
 function discon() {
-    /* ap.loading(false) */
-    /* ap.changeMessage(false, null, esMedico); */
-
     fetch("/api/login", {
         method: "POST",
         headers: {
@@ -58,6 +53,7 @@ function discon2() {
 function back() {
     chatsContainer.classList.remove("hidden");
     chatContainer.classList.add("hidden");
+    socket.disconnect();
 }
 
 // --------------------------------------- //
@@ -103,6 +99,7 @@ form.addEventListener('submit', (e) => {
         })
         .then((data) => {
             ap.changeMessage(true, data.nombre, data.medico);
+            cb.getChats();
         })
         .catch((err) => {
             ap.loading(false);
