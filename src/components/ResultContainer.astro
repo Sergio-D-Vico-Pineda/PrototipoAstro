@@ -1,7 +1,21 @@
 ---
+import { db } from "../../astro.config.mjs";
+
 import ArrowRight from "../components/ArrowRight.astro";
 import Document from "../components/Document.astro";
 import UploadForm2 from "./UploadForm2.astro";
+
+const userId = document.getElementById("userId");
+if (!userId) {
+    return;
+}
+const rs = await db.execute({
+    sql: "SELECT * FROM resultado WHERE usuarioId = $user",
+    args: {
+        user: userId.innerHTML,
+    },
+});
+console.log(rs);
 ---
 
 <div id="resultContainer" class="hidden">
@@ -22,6 +36,13 @@ import UploadForm2 from "./UploadForm2.astro";
         <article
             class="grid grid-cols-2 h-64 overflow-y-auto overflow-x-hidden place-items-center gap-1 pb-6 mb-3"
         >
+            {
+                rs.rows.length === 0 ? (
+                    <div class="text-center">No hay chats disponibles</div>
+                ) : (
+                    <div class="text-center"> {rs.rows[0].nombre}</div>
+                )
+            }
             <div><Document /></div>
             <div><Document /></div>
             <div><Document /></div>

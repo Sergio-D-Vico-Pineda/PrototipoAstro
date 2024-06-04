@@ -6,9 +6,9 @@ const form = document.getElementById("form");
 
 const btnDisconnect = document.getElementById("btnDisconnect");
 const iEmail = document.getElementById("email");
-
-const forgetPassword = document.getElementById("forgetPassword");
+const userId = document.getElementById("userId");
 const inputPassword = document.getElementById("inputPassword");
+const forgetPassword = document.getElementById("forgetPassword");
 
 const btnBack = document.getElementById("btnBack");
 
@@ -36,6 +36,7 @@ function discon() {
         .then((data) => {
             ap.loading(false)
             ap.changeMessage(false, null, esMedico);
+            userId.innerHTML = '';
         })
         .catch((err) => {
             console.log('ERROR DISCONNECTING??')
@@ -100,6 +101,7 @@ form.addEventListener('submit', (e) => {
         .then((data) => {
             ap.changeMessage(true, data.nombre, data.medico);
             cb.getChats();
+            userId.value = data.userId;
         })
         .catch((err) => {
             ap.loading(false);
