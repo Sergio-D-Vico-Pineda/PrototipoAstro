@@ -1,16 +1,5 @@
 ---
-/* import { db } from "../../astro.config.mjs"; */
 import ArrowLeft from "./ArrowLeft.astro";
-
-/* const rs = await db.execute({
-    sql: "SELECT usuarioId, nombre FROM usuario WHERE email = $mail AND contraseñaHash = $pass LIMIT 1",
-    args: {
-        mail: "paciente@mail.com",
-        pass: "sergio",
-    },
-}); */
-/* console.log(rs); */
-/* { rs.rows.length === 0 ? <div class="text-center">No hay chats disponibles</div> : <div class="text-center"> {rs.rows[0].nombre}</div> }  */
 ---
 
 <div
@@ -18,22 +7,22 @@ import ArrowLeft from "./ArrowLeft.astro";
     class="hidden h-80 bg-zinc-400 rounded-xl w-80 mb-52 mt-8 pt-2"
 >
     <h1 class="text-2xl text-center mb-3">Chats</h1>
-    <ul id="chatlist" class="flex flex-col gap-1 bg-teal-400 h-3/4 overflow-y-auto">
+    <ul id="chatlist" class="flex flex-col gap-1 h-3/4 overflow-y-auto">
         <li class="bg-slate-300 px-5 py-2 flex flex-col rounded-lg">
             <p class="text-center text-white">No hay chats disponibles</p>
         </li>
-        <!-- <li
-            class="bg-slate-300 px-5 py-2 flex items-center justify-around rounded-lg"
-        >
-            <div class="bg-white rounded-full p-1"></div>
-            <p class="text-center text-white flex-grow">Nombre</p>
-        </li> -->
     </ul>
 </div>
 
 <div id="chatContainer" class="hidden">
     <div class="flex justify-center items-center gap-2 mb-2">
-        <div title="Volver" id="btnBack" class="bg-slate-300 p-[5px] rounded-full w-fit cursor-pointer"><ArrowLeft /></div>
+        <div
+            title="Volver"
+            id="btnBack"
+            class="bg-slate-300 p-[5px] rounded-full w-fit cursor-pointer"
+            ><ArrowLeft /></div
+        >
+        <span id="receptorId" class="hidden invisible"></span>
         <h1 class="text-2xl text-center">Chat</h1>
     </div>
     <section
@@ -56,7 +45,7 @@ import ArrowLeft from "./ArrowLeft.astro";
             type="submit"
             id="btnSend"
             class="btn bg-purple-500 rounded-lg py-1 px-2 disabled:bg-purple-900"
-            >Enviar</button
+            disabled>Enviar</button
         >
     </form>
 </div>
@@ -91,4 +80,3 @@ import ArrowLeft from "./ArrowLeft.astro";
         >
     </form>
 </div>
-
