@@ -1,5 +1,3 @@
-const btnSend = document.getElementById("btnSend");
-
 const chatContainer = document.getElementById("chatContainer");
 
 const chatsContainer = document.getElementById("chatsContainer");
@@ -7,9 +5,10 @@ const resultContainer = document.getElementById("resultContainer");
 const hr = document.querySelector("hr");
 
 const btnConnect = document.getElementById("btnConnect");
-const iMessage = document.getElementById("message");
+const btnSend = document.getElementById("btnSend");
 const btnDisconnect = document.getElementById("btnDisconnect");
 const iEmail = document.getElementById("email");
+const iMensaje = document.getElementById("message");
 
 const disconnectContainer = document.getElementById("disconnectContainer");
 const clientUserDisc = document.getElementById("disconnectContainer").querySelector("span");
@@ -48,8 +47,6 @@ function fromLoginToChat(active, user) {
 }
 
 function changeMessage(active = true, user, isMedico) {
-    console.log(isMedico)
-
     if (active && isMedico == false) {
         console.log('NO ES MEDICO ACTIVO')
         chatsContainer.classList.remove("hidden");
@@ -91,8 +88,9 @@ function changeMessage(active = true, user, isMedico) {
 }
 
 function btnState() {
-    btnSend.disabled = !iMessage.value;
+    btnSend.disabled = !iMensaje.value;
 }
+
 function removeForgetPassword() {
     forgetPassword.classList.add("hidden");
 }
