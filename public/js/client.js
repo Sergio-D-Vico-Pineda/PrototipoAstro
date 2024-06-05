@@ -1,5 +1,6 @@
 import * as ap from "./apareance.js";
 import * as cb from "./chatbox.js";
+import * as pa from "./socket/paciente.js";
 /* import * as m from "./medic.js"; */
 
 const form = document.getElementById("form");
@@ -109,6 +110,33 @@ form.addEventListener('submit', (e) => {
             console.error(err);
         });
 })
+
+
+
+/* const selUsers = document.getElementById("selUsers"); */
+
+/* async function listMedic(e) {
+console.log(e.target.value);
+
+await fetch("/api/upload", {
+    method: "GET",
+    body: '1',
+    // headers: {
+      //  "Content-Type": "multipart/form-data",
+    //}, 
+})
+    .then((res) => {
+        if (res.ok) {
+            alert("File uploaded successfully");
+        }
+    })
+    .catch((err) => {
+        alert(err);
+    });
+} */
+
+/* selUsers.addEventListener("change", listMedic) */
+
 
 // --------------------------------------- //
 
