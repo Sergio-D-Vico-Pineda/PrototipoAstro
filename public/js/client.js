@@ -1,7 +1,7 @@
 import * as ap from "./apareance.js";
 import * as cb from "./chatbox.js";
 import * as pa from "./socket/paciente.js";
-/* import * as m from "./medic.js"; */
+import * as m from "./socket/medic.js";
 
 const form = document.getElementById("form");
 
@@ -10,8 +10,6 @@ const iEmail = document.getElementById("email");
 const userId = document.getElementById("userId");
 const inputPassword = document.getElementById("inputPassword");
 const forgetPassword = document.getElementById("forgetPassword");
-
-const btnBack = document.getElementById("btnBack");
 
 let esMedico;
 
@@ -52,15 +50,7 @@ function discon2() {
     forgetPassword.classList.add("hidden");
 };
 
-function back() {
-    chatsContainer.classList.remove("hidden");
-    chatContainer.classList.add("hidden");
-    socket.disconnect();
-}
-
 // --------------------------------------- //
-
-btnBack.addEventListener("click", back);
 
 btnDisconnect.addEventListener("click", discon2);
 
@@ -92,18 +82,32 @@ form.addEventListener('submit', (e) => {
         }),
     })
         .then((res) => {
-            if (!res.ok) {
-                forgetPassword.classList.remove("hidden");
-                ap.loading(false);
-            }
-            else
+            if (res.ok) {
                 return res.json();
+            }
+            else if (res.status == 401) {
+                forgetPassword.innerHTML = "Email o contraseña incorrecta";
+                forgetPassword.classList.remove("hidden");
+            } else if (res.status == 409) {
+                forgetPassword.innerHTML = "El usuario ya está conectado";
+                forgetPassword.classList.remove("hidden");
+            }
+            ap.loading(false);
+            return { error: true };
         })
         .then((data) => {
-            ap.changeMessage(true, data.nombre, data.medico);
-            cb.getChats();
+            if (data.error) {
+                return;
+            }
             userId.value = data.usuarioId;
-            pa.getResults(userId.value);
+            ap.changeMessage(true, data.nombre, data.medico);
+            if (data.medico) {
+                m.getUsers();
+
+            } else {
+                cb.getChats();
+                pa.getResults(userId.value);
+            }
         })
         .catch((err) => {
             ap.loading(false);
@@ -111,36 +115,8 @@ form.addEventListener('submit', (e) => {
         });
 })
 
-
-
-/* const selUsers = document.getElementById("selUsers"); */
-
-/* async function listMedic(e) {
-console.log(e.target.value);
-
-await fetch("/api/upload", {
-    method: "GET",
-    body: '1',
-    // headers: {
-      //  "Content-Type": "multipart/form-data",
-    //}, 
-})
-    .then((res) => {
-        if (res.ok) {
-            alert("File uploaded successfully");
-        }
-    })
-    .catch((err) => {
-        alert(err);
-    });
-} */
-
-/* selUsers.addEventListener("change", listMedic) */
-
-
 // --------------------------------------- //
 
-// create async function
 document.getElementById("disconnectall").addEventListener("click", () => {
 
     fetch("/api/login", {
@@ -170,3 +146,4 @@ document.getElementById("disconnectall").addEventListener("click", () => {
         });
 
 })
+
