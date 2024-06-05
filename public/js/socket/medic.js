@@ -1,7 +1,7 @@
 const selUsers = document.getElementById("selUsers");
 
 async function getUsers(e) {
-    await fetch("/api/users", {
+    await fetch("/api/pacientes", {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
