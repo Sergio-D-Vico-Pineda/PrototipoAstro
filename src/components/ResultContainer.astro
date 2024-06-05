@@ -1,54 +1,26 @@
 ---
-import { db } from "../../astro.config.mjs";
-
-import ArrowRight from "../components/ArrowRight.astro";
-import Document from "../components/Document.astro";
 import UploadForm2 from "./UploadForm2.astro";
-
-const userId = document.getElementById("userId");
-if (!userId) {
-    return;
-}
-const rs = await db.execute({
-    sql: "SELECT * FROM resultado WHERE usuarioId = $user",
-    args: {
-        user: userId.innerHTML,
-    },
-});
-console.log(rs);
 ---
 
 <div id="resultContainer" class="hidden">
     <h1 class="text-2xl text-center mb-3">Resultados</h1>
     <section
-        id=""
+        id="resultSection"
         class="bg-zinc-500 h-80 w-80 p-3 rounded-2xl shadow-gray-400 shadow-2xl overflow-y-hidden"
     >
         <header>
             <h3
-                class="cursor-pointer text-2xl py-1 px-4 mx-auto w-fit rounded
-          mb-4
+                id="resultTitle"
+                class="cursor-pointer text-2xl py-1 px-4 mx-auto w-fit rounded mb-4
     bg-[#d9d9d9] hover:bg-[#a5a5a5] transition-colors"
             >
-                Todos los resultados <ArrowRight />
+                Todos los resultados
             </h3>
         </header>
         <article
-            class="grid grid-cols-2 h-64 overflow-y-auto overflow-x-hidden place-items-center gap-1 pb-6 mb-3"
+            id="results"
+            class="grid grid-cols-2 h-64 overflow-y-auto overflow-x-hidden place-items-center gap-1 pb-6 mb-3 relative"
         >
-            {
-                rs.rows.length === 0 ? (
-                    <div class="text-center">No hay chats disponibles</div>
-                ) : (
-                    <div class="text-center"> {rs.rows[0].nombre}</div>
-                )
-            }
-            <div><Document /></div>
-            <div><Document /></div>
-            <div><Document /></div>
-            <div><Document /></div>
-            <div><Document /></div>
-            <div><Document /></div>
         </article>
     </section>
 </div>
@@ -72,3 +44,11 @@ console.log(rs);
         </footer>
     </section>
 </div>
+
+<!-- 
+
+                        
+
+
+
+ -->

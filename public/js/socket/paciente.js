@@ -1,7 +1,12 @@
 import { io } from "https://cdn.socket.io/4.7.5/socket.io.esm.min.js";
 
+
 const iEmail = document.getElementById("email");
 const inputPassword = document.getElementById("inputPassword");
+
+const results = document.getElementById("results");
+const resultTitle = document.getElementById("resultTitle");
+const resultSection = document.getElementById("resultSection");
 
 let socket;
 
@@ -31,8 +36,8 @@ async function connect(userId) {
         socket.on("connect", () => {
             console.log("Conectado al servidor");
             console.log(socket.auth.usuarioId);
-           /*  messages.innerHTML = "";
-            ap.changeMessage(true, inputUsername.value); */
+            /*  messages.innerHTML = "";
+             ap.changeMessage(true, inputUsername.value); */
         });
 
         socket.on('message', (msg, serverOffset, clientUser) => {
@@ -53,54 +58,80 @@ async function connect(userId) {
     }
 };
 
-/* log(`Intento conectarse : ${clientMail} \n`);
+async function getResults(userId) {
+    await fetch(`/api/results`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId }),
+    }).then((res) => {
+        if (!res.ok) {
+            console.log('ERROR GETTING RESULTS??')
+        }
+        else
+            return res.json();
+    }).then((rs) => {
+        console.log(rs);
+        results.innerHTML = "";
+        if (rs.length > 0) {
+            resultTitle.innerHTML = "Todos los resultados";
+            resultSection.classList.add("h-80");
+            results.classList.remove("hidden");
+            for (const row of rs) {
+                let div = document.createElement("div");
 
-rs = await db.execute({
-    sql: "SELECT usuarioId, nombre, email FROM usuario WHERE email = $mail AND contraseñaHash = $pass LIMIT 1",
-    args: {
-        mail: clientMail,
-        pass: password
-    }
-});
+                div.classList.add("text-center", "cursor-pointer", "hover:bg-white", "bg-slate-400", "transition-colors", "rounded-xl");
+                let p = document.createElement("span");
+                p.classList.add("font-bold");
+                p.textContent = row.tipoResultado + ' ⇓';
+                let archivob64 = atob(row.archivo);
 
-if (rs.rows.length === 0 || usersConnected.includes(rs.rows[0].email)) {
-    log('No esta en la BBDD o ya ha iniciado sesión');
-    log(`Cliente desconectado: ${clientMail} \n`);
-    io.emit('forceDisconnect');
-    socket.disconnect();
-    return;
+                let obj = document.createElement('object');
+                obj.classList.add("rounded-xl", "w-full");
+                obj.type = 'application/pdf';
+                obj.data = 'data:application/pdf;base64,' + row.archivo;
+
+                let link = document.createElement('a');
+                link.classList.add("overflow-hidden");
+                link.download = row.descripcion + '.pdf';
+                link.href = 'data:application/octet-stream;base64,' + row.archivo;
+                link.title = 'File Size: ' + Math.round(archivob64.length / 1024) + ' KB - PDF Version: ' + archivob64.match(/^.PDF-([0-9.]+)/)[1];
+
+                link.append(obj)
+                link.append(p)
+                div.append(link)
+                results.append(div);
+            }
+        } else if (rs.length === 0) {
+            resultTitle.innerHTML = "No hay resultados";
+            resultSection.classList.remove("h-80");
+            results.classList.add("hidden");
+        }
+    })
 }
-socket.on('disconnect', () => {
-    log(`Cliente desconectado: ${clientMail} \n`);
-    usersConnected = usersConnected.filter(email => email !== clientMail);
-    socket.disconnect();
-    return;
-})
 
-await db.execute({
-    sql: "SELECT 1 FROM medico WHERE usuarioId = $id",
-    args: {
-        id: rs.rows[0].usuarioId
-    }
-}).then(rs1 => {
-    isMedico = rs1.rows.length > 0
-    isMedico ? log('Es medico') : log('No es medico');
-}).catch(err => {
-    log('HAS ROTO ALGO:', err);
-    return;
-})
+// Decode Base64 to binary and show some information about the PDF file (note that I skipped all checks)
+/* var bin = atob(b64);
+console.log('File Size:', Math.round(bin.length / 1024), 'KB');
+console.log('PDF Version:', bin.match(/^.PDF-([0-9.]+)/)[1]);
+console.log('Create Date:', bin.match(/<xmp:CreateDate>(.+?)<\/xmp:CreateDate>/)[1]);
+console.log('Modify Date:', bin.match(/<xmp:ModifyDate>(.+?)<\/xmp:ModifyDate>/)[1]);
+console.log('Creator Tool:', bin.match(/<xmp:CreatorTool>(.+?)<\/xmp:CreatorTool>/)[1]);
 
-const clientName = rs.rows[0].nombre;
+// Embed the PDF into the HTML page and show it to the user
+var obj = document.createElement('object');
+obj.style.width = '100%';
+obj.style.height = '842pt';
+obj.type = 'application/pdf';
+obj.data = 'data:application/pdf;base64,' + b64;
+document.body.appendChild(obj);
 
-socket.on('message', async (msg) => {
-    log(`Mensaje enviado: ${clientName}: ${msg} \n`);
-    io.emit('message', msg, socket.handshake.auth.serverOffset, clientName);
-})
+// Insert a link that allows the user to download the PDF file
+var link = document.createElement('a');
+link.innerHTML = 'Download PDF file';
+link.download = 'file.pdf';
+link.href = 'data:application/octet-stream;base64,' + b64;
+document.body.appendChild(link); */
 
-io.emit('message', `¡Hola, ${clientName}!`, socket.handshake.auth.serverOffset, 'Server');
-usersConnected.push(rs.rows[0].email);
-
-log(`Nuevo cliente conectado: ${clientMail} \n`);
-log(`Conectados: ${usersConnected}`); */
-
-export { connect };
+export { connect, getResults };

@@ -101,7 +101,8 @@ form.addEventListener('submit', (e) => {
         .then((data) => {
             ap.changeMessage(true, data.nombre, data.medico);
             cb.getChats();
-            userId.value = data.userId;
+            userId.value = data.usuarioId;
+            pa.getResults(userId.value);
         })
         .catch((err) => {
             ap.loading(false);
