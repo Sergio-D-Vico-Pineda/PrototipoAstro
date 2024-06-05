@@ -3,7 +3,7 @@ import defaultTheme from 'tailwindcss/defaultTheme'
 export default {
 	content: [
 		'./src/**/*.{astro,html,js}',
-		'./public/js/*.js'
+		'./public/js/**/*.js'
 	],
 	theme: {
 		extend: {
