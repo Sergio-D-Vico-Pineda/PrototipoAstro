@@ -40,10 +40,18 @@ export async function POST({ request }) {
         }
     });
 
-    if (rs.rows.length === 0 || usersConnected.includes(rs.rows[0].email)) {
-        console.log("Usuario no encontrado o ya está conectado");
-        return new Response(JSON.stringify({ error: "Usuario no encontrado o ya está conectado" }), {
-            status: 404,
+    if (rs.rows.length === 0) {
+        console.log("Usuario no encontrado");
+        return new Response(JSON.stringify({ error: "Email o contraseña incorrecta" }), {
+            status: 401,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+    } else if (usersConnected.includes(rs.rows[0].email)) {
+        console.log("Usuario ya conectado");
+        return new Response(JSON.stringify({ error: "El usuario ya está conectado" }), {
+            status: 409,
             headers: {
                 "Content-Type": "application/json",
             },
