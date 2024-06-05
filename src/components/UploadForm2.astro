@@ -1,25 +1,89 @@
 <!-- src/components/FileUpload.astro -->
-<form id="upload-form">
+<form id="upload-form" class="text-center">
+    <div class="flex gap-2 w-full mb-2">
+        <label
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >Paciente
+            <select
+                id="selUsers"
+                name="Usuarios"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5"
+                disabled
+            >
+                <option value="0">Sin usuarios</option>
+            </select>
+        </label>
+        <label
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >Tipo
+            <select
+                id="selTipos"
+                name="Tipos"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full p-2.5"
+            >
+                <option value="analitica">Analítica</option>
+                <option value="radiografia">Radiografía</option>
+                <option value="tomografia">Tomografía</option>
+                <option value="resonancia">Resonancia</option>
+                <option value="ecografia">Ecografía</option>
+                <option value="electrocardiograma">Electrocardiograma</option>
+            </select>
+        </label>
+    </div>
+
+    <label class="font-medium text-gray-900 dark:text-white"
+        >Nombre :
+        <input
+            type="text"
+            id="descripcion"
+            name="Descripcion"
+            autocomplete="off"
+            class="input text-gray-900 border border-gray-300 rounded-lg bg-gray-50"
+        />
+    </label>
+
     <input
-        class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+        class="mt-4 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
         type="file"
         id="file-input"
         name="file"
         accept="application/pdf"
     />
-    <button type="button" id="upload-button">Upload</button>
-</form>
+    <button
+        type="button"
+        id="upload-button"
+        class="w-fit my-4 mx-auto btn bg-purple-500/80 rounded-lg py-1 px-2 disabled:bg-purple-900"
+        >Subir archivo</button
+    >
 
-<script is:inline type="module">
-    document
-        .getElementById("upload-button")
-        .addEventListener("click", async () => {
+    <script is:inline>
+        const btnUpload = document.getElementById("upload-button");
+        const userId = document.getElementById("userId");
+
+        btnUpload.addEventListener("click", async () => {
+            console.log(userId.value);
+            const selUsers = document.getElementById("selUsers");
+            const selTipos = document.getElementById("selTipos");
+            const desc = document.getElementById("descripcion");
             const input = document.getElementById("file-input");
             const file = input.files[0];
-            if (!file) return alert("Please select a file");
+
+            if (!file) return alert("Porfavor selecciona un archivo");
+
+            if (selUsers.value == 0)
+                return alert("Porfavor selecciona un paciente");
+
+            if (selTipos.value == 0)
+                return alert("Porfavor selecciona un tipo");
+
+            if (!desc.value) return alert("Porfavor escribe una descripción");
 
             const formData = new FormData();
             formData.append("file", file);
+            formData.append("tipo", selTipos.value);
+            formData.append("pacienteId", selUsers.value);
+            formData.append("medicoId", userId.value);
+            formData.append("descripcion", desc.value);
 
             await fetch("/api/upload", {
                 method: "POST",
@@ -31,10 +95,15 @@
                 .then((res) => {
                     if (res.ok) {
                         alert("File uploaded successfully");
+                        selTipos.value = 0;
+                        selUsers.value = 0;
+                        desc.value = "";
+                        input.value = "";
                     }
                 })
                 .catch((err) => {
                     alert(err);
                 });
         });
-</script>
+    </script>
+</form>
