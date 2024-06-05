@@ -36,6 +36,7 @@ import ResultContainer from "../components/ResultContainer.astro";
             >
             <p class="text-2xl font-bold">
                ¡Bienvenido <span id="userSpan">User</span>!
+               <small id="userId" hidden class="hidden"></small>
             </p>
             <button
                id="btnDisconnect"
@@ -74,7 +75,7 @@ import ResultContainer from "../components/ResultContainer.astro";
                   class="input w-full max-w-xs bg-slate-400 rounded-xl py-2 px-4 placeholder-black/60 disabled:opacity-75 disabled:bg-slate-300"
                />
                <small id="forgetPassword" class="text-red-500 hidden"
-                  >Usuario o contraseña incorrectos</small
+                  >Email o contraseña incorrecta</small
                >
             </label>
             <span id="disconnectall" class="text-sm cursor-pointer"
@@ -108,7 +109,6 @@ import ResultContainer from "../components/ResultContainer.astro";
          class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700 w-full hidden"
       />
       <ChatCointainer />
-      <small id="userId" hidden class="hidden"></small>
       <script src="/js/client.js" is:inline type="module"></script>
       <script src="/js/autologin.js" is:inline></script>
    </div>
