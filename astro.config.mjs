@@ -11,7 +11,6 @@ function log(text) {
 
 let rs;
 let isMedico;
-let usersConnected = [];
 
 dotenv.config();
 
@@ -54,7 +53,7 @@ export default defineConfig(
                         }
                      });
 
-                     if (rs.rows.length === 0 || usersConnected.includes(rs.rows[0].email)) {
+                     if (rs.rows.length === 0) {
                         log('No esta en la BBDD o ya ha iniciado sesión');
                         log(`Cliente desconectado: ${clientMail} \n`);
                         io.emit('forceDisconnect');
@@ -63,7 +62,6 @@ export default defineConfig(
                      }
                      socket.on('disconnect', () => {
                         log(`Cliente desconectado: ${clientMail} \n`);
-                        usersConnected = usersConnected.filter(email => email !== clientMail);
                         socket.disconnect();
                      })
 
@@ -83,15 +81,12 @@ export default defineConfig(
 
                      socket.on('message', async (msg) => {
                         log(`Mensaje enviado: ${clientName}: ${msg} \n`);
-                        io.emit('message', msg, socket.handshake.auth.serverOffset, clientName);
+                        io.emit('message', msg, socket.handshake.auth.serverOffset, clientName, socket.handshake.auth.usuarioId);
                      })
 
-                     /* io.emit('name', clientName, isMedico); */
-                     io.emit('message', `¡Hola, ${clientName}!`, socket.handshake.auth.serverOffset, 'Server');
-                     usersConnected.push(rs.rows[0].email);
+                     io.emit('message', `¡Hola, ${clientName}!`, socket.handshake.auth.serverOffset, 'Server', 0);
 
                      log(`Nuevo cliente conectado: ${clientMail} \n`);
-                     log(`Conectados: ${usersConnected}`);
                   })
 
                   httpServer.listen(3000, () => {
