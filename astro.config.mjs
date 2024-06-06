@@ -79,11 +79,11 @@ export default defineConfig(
 
                      const clientName = rs.rows[0].nombre;
 
-                     socket.on('message', async (msg) => {
+                     socket.on('message', async (msg, receptor) => {
                         log(`Mensaje enviado: ${clientName}: ${msg} \n`);
-                        io.emit('message', msg, socket.handshake.auth.serverOffset, clientName, socket.handshake.auth.usuarioId);
+                        io.emit('message', msg, socket.handshake.auth.serverOffset, clientName, socket.handshake.auth.usuarioId, receptor);
                      })
-
+                     
                      io.emit('message', `¡Hola, ${clientName}!`, socket.handshake.auth.serverOffset, 'Server', 0);
 
                      log(`Nuevo cliente conectado: ${clientMail} \n`);

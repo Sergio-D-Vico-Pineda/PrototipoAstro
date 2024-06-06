@@ -64,14 +64,17 @@ async function connect(receptorId) {
             });
         });
 
-        socket.on('message', (msg, serverOffset, clientUser, userId1) => {
+        socket.on('message', (msg, serverOffset, clientUser, origen, destino) => {
             let item;
-            if (clientUser == userSpan.innerText) {
-                item = `<li class="bg-slate-300 border border-black px-5 py-2 flex flex-col rounded-2xl text-end"><span class="text-xl text-wrap break-words">${msg}</span><small class="text-xs text-wrap break-words">${clientUser}</small> </li>`
-                console.log(`${userId.value} - ${userId1}: ${msg}`);
-            } else {
+
+            console.log('ORIGEN: ', origen, 'DESTINO: ', destino);
+
+            if (origen == userId.value) {
                 item = `<li class="bg-slate-400 border border-black px-5 py-2 flex flex-col rounded-2xl"><span class="text-xl text-wrap break-words">${msg}</span><small class="text-xs text-wrap break-words">${clientUser}</small></li>`
-                console.log(`${userId1} - ${userId.value}: ${msg}`);
+                console.log(`${destino} - ${origen}: ${msg}`);
+            } else {
+                item = `<li class="bg-slate-300 border border-black px-5 py-2 flex flex-col rounded-2xl text-end"><span class="text-xl text-wrap break-words">${msg}</span><small class="text-xs text-wrap break-words">${clientUser}</small> </li>`
+                console.log(`${origen} - ${destino}: ${msg}`);
             }
 
             messages.insertAdjacentHTML('beforeend', item)
