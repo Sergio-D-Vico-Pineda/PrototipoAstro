@@ -45,6 +45,7 @@ async function connect(receptorId) {
             $receptorId.innerText = receptorId;
             messages.innerHTML = "";
             console.log(userId.value, receptorId);
+
             await fetch(`/api/getmessages`, {
                 method: "POST",
                 headers: {
@@ -141,9 +142,9 @@ function back() {
     socket.disconnect();
 }
 
-iMensaje.addEventListener("input", ap.btnState);
-
 btnBack.addEventListener("click", back);
+
+iMensaje.addEventListener("input", ap.btnState);
 
 btnSend.addEventListener("click", (e) => {
     e.preventDefault()
@@ -153,7 +154,6 @@ btnSend.addEventListener("click", (e) => {
         return;
     }
 
-    console.log(iMensaje.value);
     socket.emit("message", iMensaje.value,);
     iMensaje.value = "";
 
