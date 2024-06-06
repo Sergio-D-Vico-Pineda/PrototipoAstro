@@ -1,5 +1,6 @@
 import * as ap from "./apareance.js";
 import * as cb from "./chatbox.js";
+import * as cbm from "./chatboxmedic.js";
 import * as pa from "./socket/paciente.js";
 import * as m from "./socket/medic.js";
 
@@ -12,45 +13,6 @@ const inputPassword = document.getElementById("inputPassword");
 const forgetPassword = document.getElementById("forgetPassword");
 
 let esMedico;
-
-function discon() {
-    fetch("/api/login", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            email: iEmail.value,
-            password: inputPassword.value,
-            disconnect: true
-        }),
-    })
-        .then((res) => {
-            if (!res.ok) {
-                console.log('ERROR DISCONNECTING??')
-            }
-            else
-                return res.json();
-        })
-        .then((data) => {
-            ap.loading(false)
-            ap.changeMessage(false, null, esMedico);
-            userId.innerHTML = '';
-        })
-        .catch((err) => {
-            console.log('ERROR DISCONNECTING??')
-            console.error(err);
-        });
-
-    console.log("Usuario desconectado");
-};
-
-function discon2() {
-    discon();
-    forgetPassword.classList.add("hidden");
-};
-
-// --------------------------------------- //
 
 btnDisconnect.addEventListener("click", discon2);
 
@@ -100,13 +62,14 @@ form.addEventListener('submit', (e) => {
                 return;
             }
             userId.value = data.usuarioId;
+            esMedico = data.medico;
             ap.changeMessage(true, data.nombre, data.medico);
             if (data.medico) {
                 m.getUsers();
-
+                cbm.getChats();
             } else {
-                cb.getChats();
                 pa.getResults(userId.value);
+                cb.getChats();
             }
         })
         .catch((err) => {
@@ -114,6 +77,45 @@ form.addEventListener('submit', (e) => {
             console.error(err);
         });
 })
+
+// --------------------------------------- //
+
+function discon() {
+    fetch("/api/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            email: iEmail.value,
+            password: inputPassword.value,
+            disconnect: true
+        }),
+    })
+        .then((res) => {
+            if (!res.ok) {
+                console.log('ERROR DISCONNECTING??')
+            }
+            else
+                return res.json();
+        })
+        .then((data) => {
+            ap.loading(false)
+            ap.changeMessage(false, null, esMedico);
+            userId.innerHTML = '';
+        })
+        .catch((err) => {
+            console.log('ERROR DISCONNECTING??')
+            console.error(err);
+        });
+
+    console.log("Usuario desconectado");
+};
+
+function discon2() {
+    discon();
+    forgetPassword.classList.add("hidden");
+};
 
 // --------------------------------------- //
 
