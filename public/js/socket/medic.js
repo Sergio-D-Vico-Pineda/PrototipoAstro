@@ -24,8 +24,6 @@ let socket;
 async function connect(receptorId) {
    const userId = document.getElementById("userId");
    try {
-      //socket = io("http://192.168.1.138:3000", {
-      //socket = io("https://automatic-meme-pv7j9j4j4vqf9pxp-3000.app.github.dev/", {
       socket = io("http://192.168.1.132:3000", {
          auth: {
             username: iEmail.value,
@@ -46,7 +44,6 @@ async function connect(receptorId) {
       socket.on("connect", async () => {
          console.log("Conectado al servidor");
          $receptorIdMedic.innerText = receptorId;
-         /* console.log('USUARIO EMISOR: ', userId.value, 'USUARIO RECEPTOR: ', receptorId); */
          messages.innerHTML = "";
 
          await fetch(`/api/getmessages`, {
