@@ -4,7 +4,7 @@ export async function POST({ request }) {
     const { emisorId, receptorId } = await request.json();
 
     const rs = await db.execute({
-        sql: "SELECT textoEncriptado, fechaEnvio FROM mensaje WHERE (emisorId = $emisorId AND receptorId = $receptorId) OR (emisorId = $receptorId AND receptorId = $emisorId) ORDER BY fechaEnvio ASC",
+        sql: "SELECT m.emisorId, m.receptorId, m.textoEncriptado, m.fechaEnvio, u.nombre FROM mensaje m LEFT JOIN usuario u ON m.emisorId = u.usuarioId WHERE ((emisorId = $emisorId AND receptorId = $receptorId) OR (emisorId = $receptorId AND receptorId = $emisorId)) ORDER BY fechaEnvio ASC",
         args: {
             emisorId,
             receptorId
@@ -18,3 +18,5 @@ export async function POST({ request }) {
         },
     });
 }
+
+""

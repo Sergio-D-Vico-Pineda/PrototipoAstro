@@ -14,9 +14,49 @@ const forgetPassword = document.getElementById("forgetPassword");
 
 let esMedico;
 
-btnDisconnect.addEventListener("click", discon2);
 
-inputPassword.addEventListener("input", ap.removeForgetPassword);
+function discon() {
+    fetch("/api/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            email: iEmail.value,
+            password: inputPassword.value,
+            disconnect: true
+        }),
+    })
+        .then((res) => {
+            if (!res.ok) {
+                console.log('ERROR DISCONNECTING??')
+            }
+            else
+                return res.json();
+        })
+        .then(() => {
+            ap.loading(false)
+            ap.changeMessage(false, null, esMedico);
+            userId.innerHTML = '';
+            console.log("Usuario desconectado");
+        })
+        .catch((err) => {
+            console.error(err);
+        });
+
+};
+
+function discon2() {
+    discon();
+    forgetPassword.classList.add("hidden");
+    if (esMedico) {
+        m.dis();
+    } else {
+        pa.dis();
+    }
+};
+
+// --------------------------------------- //
 
 form.addEventListener('submit', (e) => {
     e.preventDefault()
@@ -80,44 +120,10 @@ form.addEventListener('submit', (e) => {
 
 // --------------------------------------- //
 
-function discon() {
-    fetch("/api/login", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            email: iEmail.value,
-            password: inputPassword.value,
-            disconnect: true
-        }),
-    })
-        .then((res) => {
-            if (!res.ok) {
-                console.log('ERROR DISCONNECTING??')
-            }
-            else
-                return res.json();
-        })
-        .then((data) => {
-            ap.loading(false)
-            ap.changeMessage(false, null, esMedico);
-            userId.innerHTML = '';
-        })
-        .catch((err) => {
-            console.log('ERROR DISCONNECTING??')
-            console.error(err);
-        });
 
-    console.log("Usuario desconectado");
-};
+btnDisconnect.addEventListener("click", discon2);
 
-function discon2() {
-    discon();
-    forgetPassword.classList.add("hidden");
-};
-
-// --------------------------------------- //
+inputPassword.addEventListener("input", ap.removeForgetPassword);
 
 document.getElementById("disconnectall").addEventListener("click", () => {
 
@@ -148,4 +154,3 @@ document.getElementById("disconnectall").addEventListener("click", () => {
         });
 
 })
-

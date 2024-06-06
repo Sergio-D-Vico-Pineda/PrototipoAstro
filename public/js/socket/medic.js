@@ -24,8 +24,9 @@ let socket;
 async function connect(receptorId) {
    const userId = document.getElementById("userId");
    try {
-      socket = io("http://192.168.1.138:3000", {
-         //socket = io("https://automatic-meme-pv7j9j4j4vqf9pxp-3000.app.github.dev/", {
+      //socket = io("http://192.168.1.138:3000", {
+      //socket = io("https://automatic-meme-pv7j9j4j4vqf9pxp-3000.app.github.dev/", {
+      socket = io("http://localhost:3000", {
          auth: {
             username: iEmail.value,
             serverOffset: 1,
@@ -45,9 +46,8 @@ async function connect(receptorId) {
       socket.on("connect", async () => {
          console.log("Conectado al servidor");
          $receptorIdMedic.innerText = receptorId;
-         console.log('USUARIO EMISOR: ', userId.value, 'USUARIO RECEPTOR: ', receptorId);
+         /* console.log('USUARIO EMISOR: ', userId.value, 'USUARIO RECEPTOR: ', receptorId); */
          messages.innerHTML = "";
-         console.log(userId.value, receptorId);
 
          await fetch(`/api/getmessages`, {
             method: "POST",
@@ -61,31 +61,15 @@ async function connect(receptorId) {
          }).then((res) => {
             return res.json();
          }).then((data) => {
-            /* console.log(data); */
+            console.log(data);
             data.forEach((msg) => {
-               console.log(msg);
+               sendmsg(msg.textoEncriptado, msg.emisorId, msg.receptorId, msg.nombre);
             })
          });
       });
 
       socket.on('message', (msg, serverOffset, clientUser, origen, destino) => {
-         let item;
-         console.log('ORIGEN: ', origen, 'DESTINO: ', destino);
-
-         if (destino == userId.value || origen == userId.value || origen == 0) {
-            if (origen == userId.value) {
-               item = `<li class="bg-slate-300 border border-black px-5 py-2 flex flex-col rounded-2xl text-end"><span class="text-xl text-wrap break-words">${msg}</span><small class="text-xs text-wrap break-words">${clientUser}</small> </li>`
-               console.log(`${origen} - ${destino}: ${msg}`);
-            } else {
-               item = `<li class="bg-slate-400 border border-black px-5 py-2 flex flex-col rounded-2xl"><span class="text-xl text-wrap break-words">${msg}</span><small class="text-xs text-wrap break-words">${clientUser}</small></li>`
-               console.log(`${destino} - ${origen}: ${msg}`);
-            }
-
-            messages.insertAdjacentHTML('beforeend', item)
-            socket.auth.serverOffset = serverOffset
-
-            chat.scrollTop = chat.scrollHeight
-         }
+         sendmsg(msg, origen, destino, clientUser);
       })
    }
    catch (error) {
@@ -171,11 +155,32 @@ function back() {
    socket.disconnect();
 }
 
+function dis() {
+   socket.disconnect();
+}
+
+function sendmsg(msg, origen, destino, clientUser) {
+   let item;
+
+   if (origen == 0 || (destino == userId.value && origen == $receptorIdMedic.innerText) || origen == userId.value) {
+      if (origen == userId.value) {
+         item = `<li class="bg-slate-300 border border-black px-5 py-2 flex flex-col rounded-2xl text-end"><span class="text-xl text-wrap break-words">${msg}</span><small class="text-xs text-wrap break-words">${clientUser}</small> </li>`
+         /* console.log(`${origen} - ${destino}: ${msg}`); */
+      } else {
+         item = `<li class="bg-slate-400 border border-black px-5 py-2 flex flex-col rounded-2xl"><span class="text-xl text-wrap break-words">${msg}</span><small class="text-xs text-wrap break-words">${clientUser}</small></li>`
+         /* console.log(`${destino} - ${origen}: ${msg}`); */
+      }
+
+      messages.insertAdjacentHTML('beforeend', item)
+      chat.scrollTop = chat.scrollHeight
+   }
+}
+
 btnBack.addEventListener("click", back);
 
 iMensaje.addEventListener("input", ap.btnState);
 
-btnSend.addEventListener("click", (e) => {
+btnSend.addEventListener("click", async (e) => {
    e.preventDefault()
 
    if (iMensaje.value == "") {
@@ -183,10 +188,28 @@ btnSend.addEventListener("click", (e) => {
       return;
    }
 
-   socket.emit("message", iMensaje.value, $receptorIdMedic.innerText);
-   iMensaje.value = "";
-
-   ap.btnState();
+   await fetch("/api/sendmessage", {
+      method: "POST",
+      headers: {
+         "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+         emisorId: userId.value,
+         receptorId: $receptorIdMedic.innerText,
+         texto: iMensaje.value
+      })
+   }).then((res) => res.json())
+      .then((data) => {
+         if (data.rowsAffected > 0) {
+            socket.emit("message", iMensaje.value, $receptorIdMedic.innerText);
+            iMensaje.value = "";
+            ap.btnState();
+         } else {
+            alert("Error al enviar el mensaje");
+            iMensaje.value = "";
+            ap.btnState();
+         }
+      });
 })
 
-export { getUsers, getChatsMedic, connect }
+export { getUsers, getChatsMedic, connect, dis }

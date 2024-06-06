@@ -84,7 +84,7 @@ export default defineConfig(
                         io.emit('message', msg, socket.handshake.auth.serverOffset, clientName, socket.handshake.auth.usuarioId, receptor);
                      })
                      
-                     io.emit('message', `¡Hola, ${clientName}!`, socket.handshake.auth.serverOffset, 'Server', 0);
+                     /* io.emit('message', `¡Hola, ${clientName}!`, socket.handshake.auth.serverOffset, 'Server', 0); */
 
                      log(`Nuevo cliente conectado: ${clientMail} \n`);
                   })
