@@ -14,7 +14,7 @@ const btnSend = document.getElementById("btnSendMedic");
 
 const chat = document.getElementById("chatMedic");
 const messages = document.getElementById("messagesMedic");
-const $receptorId = document.getElementById("receptorId");
+const $receptorIdMedic = document.getElementById("receptorIdMedic");
 
 const iEmail = document.getElementById("email");
 const inputPassword = document.getElementById("inputPassword");
@@ -30,7 +30,7 @@ async function connect(receptorId) {
                 username: iEmail.value,
                 serverOffset: 1,
                 password: inputPassword.value,
-                usuarioId: receptorId
+                usuarioId: userId.value
             },
         });
 
@@ -44,7 +44,8 @@ async function connect(receptorId) {
 
         socket.on("connect", async () => {
             console.log("Conectado al servidor");
-            $receptorId.innerText = receptorId;
+            console.log($receptorIdMedic.innerText);
+            $receptorIdMedic.innerText = receptorId;
             console.log('USUARIO EMISOR: ', userId.value, 'USUARIO RECEPTOR: ', receptorId);
             messages.innerHTML = "";
             console.log(userId.value, receptorId);
@@ -72,13 +73,13 @@ async function connect(receptorId) {
             let item;
 
             console.log('ORIGEN: ', origen, 'DESTINO: ', destino);
-            
+
             if (origen == userId.value) {
-                item = `<li class="bg-slate-400 border border-black px-5 py-2 flex flex-col rounded-2xl"><span class="text-xl text-wrap break-words">${msg}</span><small class="text-xs text-wrap break-words">${clientUser}</small></li>`
-                console.log(`${destino} - ${origen}: ${msg}`);
-                } else {
                 item = `<li class="bg-slate-300 border border-black px-5 py-2 flex flex-col rounded-2xl text-end"><span class="text-xl text-wrap break-words">${msg}</span><small class="text-xs text-wrap break-words">${clientUser}</small> </li>`
                 console.log(`${origen} - ${destino}: ${msg}`);
+            } else {
+                item = `<li class="bg-slate-400 border border-black px-5 py-2 flex flex-col rounded-2xl"><span class="text-xl text-wrap break-words">${msg}</span><small class="text-xs text-wrap break-words">${clientUser}</small></li>`
+                console.log(`${destino} - ${origen}: ${msg}`);
             }
 
             messages.insertAdjacentHTML('beforeend', item)
@@ -182,7 +183,7 @@ btnSend.addEventListener("click", (e) => {
         return;
     }
 
-    socket.emit("message", iMensaje.value, $receptorId.value);
+    socket.emit("message", iMensaje.value, $receptorIdMedic.innerText);
     iMensaje.value = "";
 
     ap.btnState();
