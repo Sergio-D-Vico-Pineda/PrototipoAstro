@@ -23,7 +23,7 @@ let socket;
 async function connect(receptorId) {
    const userId = document.getElementById("userId");
    try {
-      socket = io("http://localhost:3000", {
+      socket = io("http://192.168.1.132:3000", {
          auth: {
             username: iEmail.value,
             serverOffset: 1,

@@ -26,7 +26,7 @@ async function connect(receptorId) {
    try {
       //socket = io("http://192.168.1.138:3000", {
       //socket = io("https://automatic-meme-pv7j9j4j4vqf9pxp-3000.app.github.dev/", {
-      socket = io("http://localhost:3000", {
+      socket = io("http://192.168.1.132:3000", {
          auth: {
             username: iEmail.value,
             serverOffset: 1,
