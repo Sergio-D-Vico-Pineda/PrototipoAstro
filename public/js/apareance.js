@@ -1,24 +1,29 @@
-const chatContainer = document.getElementById("chatContainer");
-
 const chatsContainer = document.getElementById("chatsContainer");
+const chatContainer = document.getElementById("chatContainer");
 const resultContainer = document.getElementById("resultContainer");
+
 const hr = document.querySelector("hr");
 
-const btnConnect = document.getElementById("btnConnect");
-const btnSend = document.getElementById("btnSend");
-const btnDisconnect = document.getElementById("btnDisconnect");
-const iEmail = document.getElementById("email");
-const iMensaje = document.getElementById("message");
+const chatsContainerMedic = document.getElementById("chatsContainerMedic");
+const chatContainerMedic = document.getElementById("chatContainerMedic");
+const resultContainerMedico = document.getElementById("resultContainerMedico");
 
+const form = document.getElementById("form");
+const iEmail = document.getElementById("email");
+const btnConnect = document.getElementById("btnConnect");
+const btnDisconnect = document.getElementById("btnDisconnect");
 const disconnectContainer = document.getElementById("disconnectContainer");
 const clientUserDisc = document.getElementById("disconnectContainer").querySelector("span");
+
+const iMensaje = document.getElementById("message");
+const iMensajeMedic = document.getElementById("messageMedic");
+const btnSend = document.getElementById("btnSend");
+const btnSendMedic = document.getElementById("btnSendMedic");
 
 const header = document.getElementById("header");
 const h1header = document.getElementById("header").querySelector("h1");
 const logo = document.getElementById("logo");
 
-const chatContainerMedico = document.getElementById("chatContainerMedico");
-const resultContainerMedico = document.getElementById("resultContainerMedico");
 
 function fromLoginToChat(active, user) {
     if (active) {
@@ -47,47 +52,52 @@ function fromLoginToChat(active, user) {
 }
 
 function changeMessage(active = true, user, isMedico) {
+ active ?  hr.classList.remove("hidden") : hr.classList.add("hidden");
+
     if (active && isMedico == false) {
         console.log('NO ES MEDICO ACTIVO')
-        chatsContainer.classList.remove("hidden");
-        resultContainer.classList.remove("hidden");
-        hr.classList.remove("hidden");
 
+        resultContainer.classList.remove("hidden");
+        chatsContainer.classList.remove("hidden");
+       
     } else if (isMedico == false) {
         console.log('NO ES MEDICO INACTIVO')
-        chatsContainer.classList.add("hidden");
+
         resultContainer.classList.add("hidden");
-        hr.classList.add("hidden");
+        chatsContainer.classList.add("hidden");
+        chatContainer.classList.add("hidden");
     }
 
     if (active && isMedico == true) {
         console.log('ES MEDICO ACTIVO')
-        chatContainerMedico.classList.remove("hidden");
+
         resultContainerMedico.classList.remove("hidden");
-        hr.classList.remove("hidden");
+        chatsContainerMedic.classList.remove("hidden");
     } else if (isMedico == true) {
         console.log('ES MEDICO INACTIVO')
-        chatContainerMedico.classList.add("hidden");
+
         resultContainerMedico.classList.add("hidden");
-        hr.classList.add("hidden");
+        chatsContainerMedic.classList.add("hidden");
+        chatContainerMedic.classList.add("hidden");
     }
 
     if (isMedico == undefined) {
         console.log('INACTIVO todo')
-        chatContainerMedico.classList.add("hidden");
+
+        chatsContainerMedic.classList.add("hidden");
+        chatContainerMedic.classList.add("hidden");
         resultContainerMedico.classList.add("hidden");
         hr.classList.add("hidden");
-        //---//
         chatsContainer.classList.add("hidden");
         chatContainer.classList.add("hidden");
         resultContainer.classList.add("hidden");
-        hr.classList.add("hidden");
     }
 
     fromLoginToChat(active, user);
 }
 
 function btnState() {
+    btnSendMedic.disabled = !iMensajeMedic.value;
     btnSend.disabled = !iMensaje.value;
 }
 
